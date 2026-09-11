@@ -1,23 +1,198 @@
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+/* Color Pallete and variables */
+:root {
+    --primary-color: #03045E;
+    --primary-hover: #02048c;
+
+    --secondary-color: #CAF0F8;
+    --secondary-hover:#B7E7F0;
+
+    --success-color: #D8E8D2;  /* Light sage green */
+    --alert-color: #F4B183;  /* Soft muted orange */
+    --info-color: #0077B6;
+
+    --text-color: #243B4A;  /* Dark blue-gray */
+    --font-Inter: 'Inter', sans-serif;
+
+    --background-color: #F7FAFC; /* Very light cool gray */
+    --card-background-color:#FFFFFF;  /* White */
+
+    --primary-button-color: #03045E;  /* Deep navy */
+    --primary-button-hover: #02048c;
+
+    --link-color: #0077B6;  /* Primary blue */
 }
 
+
+
+/* ***************** */
+/* Navigation Menu */
+/* ***************** */
+.nav-background {
+    background-color: var(--primary-button-color);
+    padding:1rem;
+}
+
+
+
+/* ***************** */
+/* PAGE */
+/* ***************** */
+html, body {
+    font-family: var(--font-Inter);
+    /* font-family: 'Lexend', sans-serif; */
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    min-height: 100vh;
+    color: var(--text-color);
+}
+
+
+
+/* ***************** */
+/* HEADINGS */
+/* ***************** */
+h1, h2, h3, h4, h5, h6, legend {
+    color:var(--button-color)
+}
+
+
+
+/* ***************** */
+/* BUTTONS and LINKS */
+/* ***************** */
 a, .btn-link {
-    color: #006bb7;
+    color: var(--link-color);
+}
+a:hover, .btn-link:hover {
+    color: var(--button-color);
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: var(--primary-button-color);
+    border-color: var(--primary-button-color);
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: var(--primary-button-hover);
+    border-color: var(--primary-button-hover);
+}
+
+.btn-secondary {
+    color: var(--text-color);
+    background-color: var(--secondary-color);
+    border-color: #B7E7F0;
+}
+
+.btn-secondary:hover {
+    color: var(--text-color);
+    background-color: var(--secondary-hover);
+    border-color: #9DDCE8;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #C0392B;
+    border-color: #C0392B;
+}
+
+.btn-danger:hover {
+    color: #fff;
+    background-color: #962D22;
+    border-color: #962D22;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--primary-color);
 }
 
+
+
+/* ***************** */
+/* CARDS */
+/* ***************** */
+.standard-card {  /* This card is the default white card throughout the application */
+    background-color: var(--card-background-color);
+    padding:1rem;
+    color:var(--text-color);
+    border-radius: 1rem;
+    border: 1px solid rgba(36, 59, 74, 0.08);
+    box-shadow: 0 2px 8px rgba(36, 59, 74, 0.12);
+}
+
+.overlay {  /* This overlay is to create a dark background behind dialogs */
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+}
+
+.overlay-container { /* This container is to center a standard-card in the dialog */
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+/* ***************** */
+/* Pop-ups */
+/* ***************** */
+.alert {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    background-color: var(--alert-color);
+    border: 1px solid #E5A06D;
+    border-radius: 0.5rem;
+}
+
+.success {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    background-color: var(--success-color);
+    border: 1px solid #B9D3B0;
+    border-radius: 0.5rem;
+}
+
+.info {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+    background-color: var(--info-color);
+    border: 1px solid #A8DCE8;
+    border-radius: 0.5rem;
+}
+
+
+
+/* ***************** */
+/* OTHER */
+/* ***************** */
 .content {
+    width: 100%;
     padding-top: 1.1rem;
+    box-sizing: border-box;
+}
+article {
+    padding: 0;
+    margin: 0;
+}
+.page, main {
+    padding: 0;
+    margin: 0;
 }
 
 h1:focus {
