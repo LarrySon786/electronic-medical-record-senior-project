@@ -1,0 +1,104 @@
+@page "/database/test"
+@rendermode InteractiveServer
+@using ElectronicMedicalRecord.Database.Models
+@inject ElectronicMedicalRecord.Services.Database.TestConnectionService testConnectionService
+
+    <p class="mt-4">
+        This page allows you to get / create entities into a table in the database. This affirms that your DbContext
+        is working.
+    </p>
+
+    @* CREATE entity to test connection *@
+    <EditForm Model=testConnection OnValidSubmit="HandleSubmit" FormName="TestConnectionForm">
+        <label class="form-label">Name</label>
+        <InputText class="form-control" @bind-Value="testConnection.FirstName"/>
+        <ValidationMessage For="(() => testConnection.FirstName)"/>
+
+        <button type="submit" class="btn btn-primary mt-2">Create Connection</button>
+        
+        
+    </EditForm>
+
+    @* ERROR Handling *@
+    @if (!string.IsNullOrWhiteSpace(error)) {
+        <div class="alert">
+            <p>Sorry, an error occured creating this database entity.</p>
+            <p>@error</p>
+        </div>
+        
+    }
+    @if (!string.IsNullOrWhiteSpace(message)) {
+        <div class="success">
+            <p>Success! Database connection working. Entity created.</p>
+            <p>@message</p>
+        </div>
+    }
+
+    @* Display All entities *@
+    <div class="mt-4">
+        <button class="btn btn-primary" @onclick="GetAllEntities">Get All Created Entities</button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Entity Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* If all test connections is null or zero, then say no entities found. Otherwise, list all entities *@
+                @if (allTestConnections.Count() == 0)
+                {
+                    <tr>
+                        <td>No entities found. Try creating and entity or clicking "Get All Created Entities"</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (TestConnection connection in allTestConnections)
+                    {
+                        <tr>
+                            <td>@connection.FirstName</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+@code {
+    public TestConnection testConnection { get; set; } = new();
+    private string error { get; set; } = string.Empty;
+    private string message { get; set; } = string.Empty;
+    public List<TestConnection> allTestConnections { get; set; } = new();
+
+    public async Task HandleSubmit() {
+        try {
+            error = "";
+            message = "";
+
+            @* This creates the entity in the database using a service *@
+            await testConnectionService.CreateTestConnectionEntity(testConnection);
+            message = "Entity created in database.";
+            testConnection = new();
+        }
+        catch (Exception ex) {
+            Console.WriteLine($"Could not create test connection. Ex: {ex}");
+            error = "Could not create test connection";
+            testConnection = new();
+        }
+    }
+
+    public async Task GetAllEntities() {
+        try {
+            error = "";
+            message = "";
+
+            @* Get all existing entities from database. *@
+            allTestConnections = await testConnectionService.GetAllTestConnections();
+            message = "All entities obtained from database";
+        }
+        catch(Exception ex) {
+            Console.WriteLine($"Could not fetch all entites from database. Ex: {ex}");
+            error = "Could not fetch entities from database.";
+        }
+    }
+}
