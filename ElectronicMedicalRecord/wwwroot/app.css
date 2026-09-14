@@ -37,7 +37,7 @@
 }
 
 
-.nav-item .nav-link .active, .nav-item .nav-link:hover{
+.nav-item .nav-link.active, .nav-item .nav-link:hover{
     background-color: transparent !important;
     color: var(--alert-color) !important;
 }
