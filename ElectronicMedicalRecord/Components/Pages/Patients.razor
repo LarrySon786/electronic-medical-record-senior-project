@@ -1,0 +1,336 @@
+@page "/patients"
+@rendermode InteractiveServer
+
+<PageTitle>Patients</PageTitle>
+
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <p class="text-uppercase small fw-semibold mb-1" style="color: var(--info-color);">Patient records</p>
+            <h1 class="mb-1">Patients</h1>
+            <p class="mb-0 text-muted">Search and select a patient to view their record.</p>
+        </div>
+        <button class="btn btn-primary" type="button" @onclick="OpenCreateDialog">
+            <span aria-hidden="true">+</span> Create New Patient
+        </button>
+    </div>
+
+    <div class="standard-card">
+        <div class="row align-items-end g-3 mb-4">
+            <div class="col-12 col-md-7 col-lg-5">
+                <label class="form-label fw-semibold" for="patient-search">Search patients</label>
+                <input id="patient-search" class="form-control" type="search"
+                       placeholder="Search by name, phone, or email"
+                       @bind="SearchTerm" @bind:event="oninput" />
+            </div>
+            <div class="col-auto ms-md-auto text-muted small">
+                @FilteredPatients.Count patient@(FilteredPatients.Count == 1 ? "" : "s") shown
+            </div>
+        </div>
+
+        @if (FilteredPatients.Count == 0)
+        {
+            <div class="info" role="status">
+                No patients match your search.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Patient</th>
+                            <th scope="col">Country</th>
+                            <th scope="col">Date of birth</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var patient in FilteredPatients)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@FullName(patient)</div>
+                                    <div class="small text-muted">Patient #@patient.Id</div>
+                                </td>
+                                <td>@CountryFor(patient)</td>
+                                <td>@patient.DateOfBirth.ToString("MMM d, yyyy")</td>
+                                <td>@patient.PhoneNumber</td>
+                                <td>@patient.Email</td>
+                                <td>
+                                    @if (patient.IsDisabled)
+                                    {
+                                        <span class="badge text-bg-secondary">Disabled</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-success">Active</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-secondary" type="button" @onclick="() => OpenPatientDialog(patient)">
+                                        View patient
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@if (IsDialogOpen)
+{
+    <PatientDialog Patient="ActivePatient"
+                   MedicalRecord="ActiveMedicalRecord"
+                   IsCreating="IsCreating"
+                   OnClose="CloseDialog"
+                   OnSave="SavePatient"
+                   OnDisable="DisablePatient" />
+}
+
+@code {
+    private string SearchTerm { get; set; } = "";
+    private bool IsDialogOpen { get; set; }
+    private bool IsCreating { get; set; }
+    private Patient ActivePatient { get; set; } = new();
+    private Medical ActiveMedicalRecord { get; set; } = new();
+
+    private List<Patient> PatientsList { get; } =
+    [
+        new Patient
+        {
+            Id = 1001,
+            FirstName = "Avery",
+            MiddleName = "Jordan",
+            LastName = "Morgan",
+            PhoneNumber = "+1 416 555 2201",
+            Email = "avery.morgan.ca@example.com",
+            Address = "14 Willow Street, Toronto, Canada",
+            DateOfBirth = new DateTime(1988, 4, 12)
+        },
+        new Patient
+        {
+            Id = 1002,
+            FirstName = "Kenji",
+            MiddleName = "Hiroshi",
+            LastName = "Tanaka",
+            PhoneNumber = "+81 3 5555 2202",
+            Email = "kenji.tanaka.jp@example.com",
+            Address = "82 Cedar Avenue, Tokyo, Japan",
+            DateOfBirth = new DateTime(1975, 9, 28)
+        },
+        new Patient
+        {
+            Id = 1003,
+            FirstName = "Sofia",
+            MiddleName = "Isabel",
+            LastName = "Garcia",
+            PhoneNumber = "+34 91 555 2203",
+            Email = "sofia.garcia.es@example.com",
+            Address = "301 Lakeview Drive, Madrid, Spain",
+            DateOfBirth = new DateTime(1996, 1, 7)
+        },
+        new Patient
+        {
+            Id = 1004,
+            FirstName = "Daniel",
+            MiddleName = "James",
+            LastName = "Reed",
+            PhoneNumber = "+44 20 5555 2204",
+            Email = "daniel.reed.uk@example.com",
+            Address = "45 Oak Street, London, United Kingdom",
+            DateOfBirth = new DateTime(1982, 6, 19)
+        },
+        new Patient
+        {
+            Id = 1005,
+            FirstName = "Mia",
+            MiddleName = "Claire",
+            LastName = "Thompson",
+            PhoneNumber = "+61 2 5555 2205",
+            Email = "mia.thompson.au@example.com",
+            Address = "118 Pine Road, Sydney, Australia",
+            DateOfBirth = new DateTime(1991, 11, 3)
+        },
+        new Patient
+        {
+            Id = 1006,
+            FirstName = "Ethan",
+            MiddleName = "Michael",
+            LastName = "Carter",
+            PhoneNumber = "+1 617 555 2206",
+            Email = "ethan.carter.us@example.com",
+            Address = "72 Maple Lane, Boston, United States",
+            DateOfBirth = new DateTime(1968, 2, 24)
+        },
+        new Patient
+        {
+            Id = 1007,
+            FirstName = "Grace",
+            MiddleName = "Marie",
+            LastName = "Wilson",
+            PhoneNumber = "+27 21 555 2207",
+            Email = "grace.wilson.za@example.com",
+            Address = "209 Birch Avenue, Cape Town, South Africa",
+            DateOfBirth = new DateTime(2000, 8, 15)
+        },
+        new Patient
+        {
+            Id = 1008,
+            FirstName = "Noah",
+            MiddleName = "Alexander",
+            LastName = "Hughes",
+            PhoneNumber = "+55 11 5555 2208",
+            Email = "noah.hughes.br@example.com",
+            Address = "63 River Street, Sao Paulo, Brazil",
+            DateOfBirth = new DateTime(1979, 12, 9)
+        },
+        new Patient
+        {
+            Id = 1009,
+            FirstName = "Olivia",
+            MiddleName = "Jane",
+            LastName = "Foster",
+            PhoneNumber = "+49 30 5555 2209",
+            Email = "olivia.foster.de@example.com",
+            Address = "154 Hillcrest Drive, Berlin, Germany",
+            DateOfBirth = new DateTime(1985, 5, 30)
+        },
+        new Patient
+        {
+            Id = 1010,
+            FirstName = "Liam",
+            MiddleName = "Robert",
+            LastName = "Hayes",
+            PhoneNumber = "+33 1 5555 2210",
+            Email = "liam.hayes.fr@example.com",
+            Address = "27 Meadow Court, Paris, France",
+            DateOfBirth = new DateTime(1993, 3, 11)
+        },
+        new Patient
+        {
+            Id = 1011,
+            FirstName = "Emma",
+            MiddleName = "Louise",
+            LastName = "Brooks",
+            PhoneNumber = "+39 06 5555 2211",
+            Email = "emma.brooks.it@example.com",
+            Address = "91 Park Boulevard, Rome, Italy",
+            DateOfBirth = new DateTime(1972, 10, 21)
+        },
+        new Patient
+        {
+            Id = 1012,
+            FirstName = "James",
+            MiddleName = "William",
+            LastName = "Collins",
+            PhoneNumber = "+31 20 5555 2212",
+            Email = "james.collins.nl@example.com",
+            Address = "336 Walnut Street, Amsterdam, Netherlands",
+            DateOfBirth = new DateTime(1959, 7, 5)
+        },
+        new Patient
+        {
+            Id = 1013,
+            FirstName = "Ava",
+            MiddleName = "Elizabeth",
+            LastName = "Turner",
+            PhoneNumber = "+46 8 5555 2213",
+            Email = "ava.turner.se@example.com",
+            Address = "408 Sunset Avenue, Stockholm, Sweden",
+            DateOfBirth = new DateTime(2003, 4, 17)
+        },
+        new Patient
+        {
+            Id = 1014,
+            FirstName = "Benjamin",
+            MiddleName = "Thomas",
+            LastName = "Parker",
+            PhoneNumber = "+91 11 5555 2214",
+            Email = "benjamin.parker.in@example.com",
+            Address = "52 Forest Road, New Delhi, India",
+            DateOfBirth = new DateTime(1976, 1, 26)
+        }
+    ];
+
+    private List<Patient> FilteredPatients => PatientsList
+        .Where(patient => string.IsNullOrWhiteSpace(SearchTerm)
+            || FullName(patient).Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
+            || patient.PhoneNumber.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
+            || patient.Email.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    private static string CountryFor(Patient patient) => patient.Id switch
+    {
+        1001 => "Canada",
+        1002 => "Japan",
+        1003 => "Spain",
+        1004 => "United Kingdom",
+        1005 => "Australia",
+        1006 => "United States",
+        1007 => "South Africa",
+        1008 => "Brazil",
+        1009 => "Germany",
+        1010 => "France",
+        1011 => "Italy",
+        1012 => "Netherlands",
+        1013 => "Sweden",
+        1014 => "India",
+        _ => "Unknown"
+    };
+
+    private void OpenPatientDialog(Patient patient)
+    {
+        ActivePatient = patient;
+        ActiveMedicalRecord = CreateMedicalRecord(patient);
+        IsCreating = false;
+        IsDialogOpen = true;
+    }
+
+    private void OpenCreateDialog()
+    {
+        ActivePatient = new Patient { DateOfBirth = DateTime.Today.AddYears(-18) };
+        ActiveMedicalRecord = new Medical();
+        IsCreating = true;
+        IsDialogOpen = true;
+    }
+
+    private void CloseDialog()
+    {
+        IsDialogOpen = false;
+    }
+
+    private void SavePatient(Patient patient)
+    {
+        if (IsCreating)
+        {
+            patient.Id = PatientsList.Count == 0 ? 1001 : PatientsList.Max(existing => existing.Id) + 1;
+            PatientsList.Add(patient);
+        }
+
+        IsDialogOpen = false;
+    }
+
+    private void DisablePatient(Patient patient)
+    {
+        patient.IsDisabled = true;
+        IsDialogOpen = false;
+    }
+
+    private static string FullName(Patient patient) =>
+        $"{patient.FirstName} {patient.MiddleName} {patient.LastName}".Replace("  ", " ").Trim();
+
+    private static Medical CreateMedicalRecord(Patient patient) => new()
+    {
+        PatientId = patient.Id,
+        Patient = patient,
+        Medications = new List<string>()
+    };
+}
