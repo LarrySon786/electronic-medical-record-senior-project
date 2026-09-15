@@ -1,5 +1,5 @@
 using ElectronicMedicalRecord.Database;
-using ElectronicMedicalRecord.Database.Models;
+using ElectronicMedicalRecord.Models;
 using ElectronicMedicalRecord.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 

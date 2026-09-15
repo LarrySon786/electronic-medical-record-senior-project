@@ -4,7 +4,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace ElectronicMedicalRecord.Database.Models.Authentication;
+namespace ElectronicMedicalRecord.Models;
 
 public class ApplicationUser : IdentityUser
 {

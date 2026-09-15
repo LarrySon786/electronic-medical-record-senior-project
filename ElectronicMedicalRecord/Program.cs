@@ -1,5 +1,6 @@
 using ElectronicMedicalRecord.Components;
 using ElectronicMedicalRecord.Database;
+using ElectronicMedicalRecord.Services;
 using ElectronicMedicalRecord.Services.Database;
 using ElectronicMedicalRecord.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ builder.Services.AddScoped<DbContextFactoryHelper>(); // This is a data base con
 builder.Services.AddScoped<SeedData>(); // Allows methods to seed data for development
 builder.Services.AddScoped<ResetDatabase>(); // Allows reseting database for developers
 builder.Services.AddScoped<TestConnectionService>(); // A temporary service to test Database connections.
+builder.Services.AddScoped<PatientService>(); // Allows operations with patient data / objects. Included CRUD operations
 
 
 
