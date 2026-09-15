@@ -1,0 +1,57 @@
+@page "/reset-db"
+@rendermode InteractiveServer
+@inject ElectronicMedicalRecord.Services.Database.ResetDatabase resetDatabaseService
+
+
+@* RESET DATABASE BUTTON *@
+<button class="btn btn-primary mt-4 mb-4" @onclick="ResetDatabaseButton">Reset My Local Database</button>
+
+<div>
+    @if(!string.IsNullOrWhiteSpace(Error)) {
+        <div class="alert">
+            <p>@Error</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="success">
+            <p>@Message</p>
+        </div>
+    }
+</div>
+
+@* Test your database connection feature *@
+<div class="mt-4">
+    <a class="btn btn-link" href="/database/test">Test database connection</a>
+    <div class="info">
+        <p >
+            Note, that each developer must create a local database using User Secrets. Please name the database like so:
+        </p>   
+        <p>
+            "ConnectionStrings:DefaultConnection =
+            Host=localhost;Port={YOUR_PORT};Database={YOUR_LOCAL_DB_NAME};Username={YOUR_LOCAL_DATABASE_USERNAME};Password={YOUR_DATABASE_PASSWORD}"
+        </p>  
+    </div>
+</div>
+
+
+
+@code {
+
+    private string Error { get; set; } = string.Empty;
+    private string Message { get; set; } = string.Empty;
+
+    private async Task ResetDatabaseButton() {
+        try {
+            Error = "";
+            Message = "";
+
+            await resetDatabaseService.ResetDatabaseAsync();
+            Message = "Success! Database reset";
+        }
+        catch(Exception ex) {
+            Console.WriteLine($"Could not reset Db. Ex: {ex}");
+            Error = "Could not reset database";
+        }
+    }
+}
