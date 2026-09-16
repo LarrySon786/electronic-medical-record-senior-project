@@ -1,0 +1,129 @@
+@using System.ComponentModel.DataAnnotations
+
+<div class="overlay" role="presentation" @onclick="Close">
+    <div class="overlay-container px-3" @onclick:stopPropagation="true">
+        <section class="standard-card w-100" style="max-width: 760px; max-height: calc(100vh - 64px); overflow-y: auto;" role="dialog" aria-modal="true" aria-labelledby="patient-dialog-title">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <p class="text-uppercase small fw-semibold mb-1" style="color: var(--info-color);">
+                        @(IsCreating ? "New record" : $"Patient #{Patient.Id}")
+                    </p>
+                    <h2 id="patient-dialog-title" class="h3 mb-0">@(IsCreating ? "Create New Patient" : FullName(Patient))</h2>
+                </div>
+                <button class="btn-close" type="button" aria-label="Close patient dialog" @onclick="Close"></button>
+            </div>
+
+            <EditForm Model="Patient" OnValidSubmit="Save">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert" />
+
+                <fieldset disabled="@(!IsCreating && Patient.IsDisabled)">
+                    <legend class="h5">Demographics</legend>
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-md-4">
+                            <label class="form-label" for="first-name">First name</label>
+                            <InputText id="first-name" class="form-control" @bind-Value="Patient.FirstName" />
+                            <ValidationMessage For="@(() => Patient.FirstName)" />
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label class="form-label" for="middle-name">Middle name</label>
+                            <InputText id="middle-name" class="form-control" @bind-Value="Patient.MiddleName" />
+                            <ValidationMessage For="@(() => Patient.MiddleName)" />
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label class="form-label" for="last-name">Last name</label>
+                            <InputText id="last-name" class="form-control" @bind-Value="Patient.LastName" />
+                            <ValidationMessage For="@(() => Patient.LastName)" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" for="date-of-birth">Date of birth</label>
+                            <InputDate id="date-of-birth" class="form-control" @bind-Value="Patient.DateOfBirth" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" for="phone-number">Phone number</label>
+                            <InputText id="phone-number" class="form-control" @bind-Value="Patient.PhoneNumber" />
+                            <ValidationMessage For="@(() => Patient.PhoneNumber)" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="email">Email</label>
+                            <InputText id="email" type="email" class="form-control" @bind-Value="Patient.Email" />
+                            <ValidationMessage For="@(() => Patient.Email)" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="address">Address</label>
+                            <InputText id="address" class="form-control" @bind-Value="Patient.Address" />
+                            <ValidationMessage For="@(() => Patient.Address)" />
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-4 mb-4">
+                        <h3 class="h5">Medical Overview</h3>
+                        @if (MedicalRecord.Medications.Count == 0)
+                        {
+                            <p class="text-muted mb-0">No medications recorded.</p>
+                        }
+                        else
+                        {
+                            <ul class="mb-0">
+                                @foreach (var medication in MedicalRecord.Medications)
+                                {
+                                    <li>@medication</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </fieldset>
+
+                @if (!IsCreating && Patient.IsDisabled)
+                {
+                    <div class="alert mb-4" role="status">This patient is disabled and cannot be edited.</div>
+                }
+
+                <div class="d-flex flex-wrap justify-content-between gap-2">
+                    <div>
+                        @if (!IsCreating && !Patient.IsDisabled)
+                        {
+                            <button class="btn btn-danger" type="button" @onclick="Disable">Disable Patient</button>
+                        }
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary" type="button" @onclick="Close">Cancel</button>
+                        @if (IsCreating || !Patient.IsDisabled)
+                        {
+                            <button class="btn btn-primary" type="submit">@(IsCreating ? "Create Patient" : "Save Changes")</button>
+                        }
+                    </div>
+                </div>
+            </EditForm>
+        </section>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Patient Patient { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public Medical MedicalRecord { get; set; } = new();
+
+    [Parameter]
+    public bool IsCreating { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback<Patient> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback<Patient> OnDisable { get; set; }
+
+    private Task Close() => OnClose.InvokeAsync();
+
+    private Task Save() => OnSave.InvokeAsync(Patient);
+
+    private Task Disable() => OnDisable.InvokeAsync(Patient);
+
+    private static string FullName(Patient patient) =>
+        $"{patient.FirstName} {patient.MiddleName} {patient.LastName}".Replace("  ", " ").Trim();
+}
