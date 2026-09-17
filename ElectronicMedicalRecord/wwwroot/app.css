@@ -199,7 +199,8 @@ article {
     margin: 0;
 }
 .page, main {
-    padding: 0;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
     margin: 0;
 }
 
