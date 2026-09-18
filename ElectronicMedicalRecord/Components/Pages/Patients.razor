@@ -1,5 +1,6 @@
 @page "/patients"
 @rendermode InteractiveServer
+@using ElectronicMedicalRecord.Models
 
 <PageTitle>Patients</PageTitle>
 
@@ -113,7 +114,7 @@
             PhoneNumber = "+1 416 555 2201",
             Email = "avery.morgan.ca@example.com",
             Address = "14 Willow Street, Toronto, Canada",
-            DateOfBirth = new DateTime(1988, 4, 12)
+            DateOfBirth = new DateOnly(1988, 4, 12)
         },
         new Patient
         {
@@ -124,7 +125,7 @@
             PhoneNumber = "+81 3 5555 2202",
             Email = "kenji.tanaka.jp@example.com",
             Address = "82 Cedar Avenue, Tokyo, Japan",
-            DateOfBirth = new DateTime(1975, 9, 28)
+            DateOfBirth = new DateOnly(1975, 9, 28)
         },
         new Patient
         {
@@ -135,7 +136,7 @@
             PhoneNumber = "+34 91 555 2203",
             Email = "sofia.garcia.es@example.com",
             Address = "301 Lakeview Drive, Madrid, Spain",
-            DateOfBirth = new DateTime(1996, 1, 7)
+            DateOfBirth = new DateOnly(1996, 1, 7)
         },
         new Patient
         {
@@ -146,7 +147,7 @@
             PhoneNumber = "+44 20 5555 2204",
             Email = "daniel.reed.uk@example.com",
             Address = "45 Oak Street, London, United Kingdom",
-            DateOfBirth = new DateTime(1982, 6, 19)
+            DateOfBirth = new DateOnly(1982, 6, 19)
         },
         new Patient
         {
@@ -157,7 +158,7 @@
             PhoneNumber = "+61 2 5555 2205",
             Email = "mia.thompson.au@example.com",
             Address = "118 Pine Road, Sydney, Australia",
-            DateOfBirth = new DateTime(1991, 11, 3)
+            DateOfBirth = new DateOnly(1991, 11, 3)
         },
         new Patient
         {
@@ -168,7 +169,7 @@
             PhoneNumber = "+1 617 555 2206",
             Email = "ethan.carter.us@example.com",
             Address = "72 Maple Lane, Boston, United States",
-            DateOfBirth = new DateTime(1968, 2, 24)
+            DateOfBirth = new DateOnly(1968, 2, 24)
         },
         new Patient
         {
@@ -179,7 +180,7 @@
             PhoneNumber = "+27 21 555 2207",
             Email = "grace.wilson.za@example.com",
             Address = "209 Birch Avenue, Cape Town, South Africa",
-            DateOfBirth = new DateTime(2000, 8, 15)
+            DateOfBirth = new DateOnly(2000, 8, 15)
         },
         new Patient
         {
@@ -190,7 +191,7 @@
             PhoneNumber = "+55 11 5555 2208",
             Email = "noah.hughes.br@example.com",
             Address = "63 River Street, Sao Paulo, Brazil",
-            DateOfBirth = new DateTime(1979, 12, 9)
+            DateOfBirth = new DateOnly(1979, 12, 9)
         },
         new Patient
         {
@@ -201,7 +202,7 @@
             PhoneNumber = "+49 30 5555 2209",
             Email = "olivia.foster.de@example.com",
             Address = "154 Hillcrest Drive, Berlin, Germany",
-            DateOfBirth = new DateTime(1985, 5, 30)
+            DateOfBirth = new DateOnly(1985, 5, 30)
         },
         new Patient
         {
@@ -212,7 +213,7 @@
             PhoneNumber = "+33 1 5555 2210",
             Email = "liam.hayes.fr@example.com",
             Address = "27 Meadow Court, Paris, France",
-            DateOfBirth = new DateTime(1993, 3, 11)
+            DateOfBirth = new DateOnly(1993, 3, 11)
         },
         new Patient
         {
@@ -223,7 +224,7 @@
             PhoneNumber = "+39 06 5555 2211",
             Email = "emma.brooks.it@example.com",
             Address = "91 Park Boulevard, Rome, Italy",
-            DateOfBirth = new DateTime(1972, 10, 21)
+            DateOfBirth = new DateOnly(1972, 10, 21)
         },
         new Patient
         {
@@ -234,7 +235,7 @@
             PhoneNumber = "+31 20 5555 2212",
             Email = "james.collins.nl@example.com",
             Address = "336 Walnut Street, Amsterdam, Netherlands",
-            DateOfBirth = new DateTime(1959, 7, 5)
+            DateOfBirth = new DateOnly(1959, 7, 5)
         },
         new Patient
         {
@@ -245,7 +246,7 @@
             PhoneNumber = "+46 8 5555 2213",
             Email = "ava.turner.se@example.com",
             Address = "408 Sunset Avenue, Stockholm, Sweden",
-            DateOfBirth = new DateTime(2003, 4, 17)
+            DateOfBirth = new DateOnly(2003, 4, 17)
         },
         new Patient
         {
@@ -256,7 +257,7 @@
             PhoneNumber = "+91 11 5555 2214",
             Email = "benjamin.parker.in@example.com",
             Address = "52 Forest Road, New Delhi, India",
-            DateOfBirth = new DateTime(1976, 1, 26)
+            DateOfBirth = new DateOnly(1976, 1, 26)
         }
     ];
 
@@ -296,7 +297,7 @@
 
     private void OpenCreateDialog()
     {
-        ActivePatient = new Patient { DateOfBirth = DateTime.Today.AddYears(-18) };
+        ActivePatient = new Patient { DateOfBirth = DateOnly.FromDateTime(DateTime.Today.AddYears(-18)) };
         ActiveMedicalRecord = new Medical();
         IsCreating = true;
         IsDialogOpen = true;
@@ -331,6 +332,6 @@
     {
         PatientId = patient.Id,
         Patient = patient,
-        Medications = new List<string>()
+        Medications = new List<Medication>()
     };
 }
