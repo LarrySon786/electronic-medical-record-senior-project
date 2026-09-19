@@ -7,10 +7,12 @@ namespace ElectronicMedicalRecord.Services.Database;
 public class ResetDatabase
 {
     private readonly DbContextFactoryHelper _context;
+    private readonly SeedData _seeder;
 
-    public ResetDatabase(DbContextFactoryHelper context)
+    public ResetDatabase(DbContextFactoryHelper context, SeedData seeder)
     {
         _context = context;
+        _seeder = seeder;
     }
 
     public async Task ResetDatabaseAsync(ProjectDatabaseConnection? context = null)
@@ -24,7 +26,7 @@ public class ResetDatabase
             await db.Database.MigrateAsync();
 
             // SEED DATA
-
+            await _seeder.SeedAsync(db);
 
             // SAVE database changes
             await db.SaveChangesAsync();
