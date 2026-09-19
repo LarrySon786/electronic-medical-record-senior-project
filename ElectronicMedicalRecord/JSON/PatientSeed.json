@@ -1,0 +1,142 @@
+[
+    {
+        "Id": 1001,
+        "FirstName": "Avery",
+        "MiddleName": "Jordan",
+        "LastName": "Morgan",
+        "PhoneNumber": "+1 416 555 2201",
+        "Email": "avery.morgan.ca@example.com",
+        "Address": "14 Willow Street, Toronto, Canada",
+        "DateOfBirth": "1988-04-12"
+    },
+    {
+        "Id": 1002,
+        "FirstName": "Kenji",
+        "MiddleName": "Hiroshi",
+        "LastName": "Tanaka",
+        "PhoneNumber": "+81 3 5555 2202",
+        "Email": "kenji.tanaka.jp@example.com",
+        "Address": "82 Cedar Avenue, Tokyo, Japan",
+        "DateOfBirth": "1975-09-28"
+    },
+    {
+        "Id": 1003,
+        "FirstName": "Sofia",
+        "MiddleName": "Isabel",
+        "LastName": "Garcia",
+        "PhoneNumber": "+34 91 555 2203",
+        "Email": "sofia.garcia.es@example.com",
+        "Address": "301 Lakeview Drive, Madrid, Spain",
+        "DateOfBirth": "1996-01-07"
+    },
+    {
+        "Id": 1004,
+        "FirstName": "Daniel",
+        "MiddleName": "James",
+        "LastName": "Reed",
+        "PhoneNumber": "+44 20 5555 2204",
+        "Email": "daniel.reed.uk@example.com",
+        "Address": "45 Oak Street, London, United Kingdom",
+        "DateOfBirth": "1982-06-19"
+    },
+    {
+        "Id": 1005,
+        "FirstName": "Mia",
+        "MiddleName": "Claire",
+        "LastName": "Thompson",
+        "PhoneNumber": "+61 2 5555 2205",
+        "Email": "mia.thompson.au@example.com",
+        "Address": "118 Pine Road, Sydney, Australia",
+        "DateOfBirth": "1991-11-03"
+    },
+    {
+        "Id": 1006,
+        "FirstName": "Ethan",
+        "MiddleName": "Michael",
+        "LastName": "Carter",
+        "PhoneNumber": "+1 617 555 2206",
+        "Email": "ethan.carter.us@example.com",
+        "Address": "72 Maple Lane, Boston, United States",
+        "DateOfBirth": "1968-02-24"
+    },
+    {
+        "Id": 1007,
+        "FirstName": "Grace",
+        "MiddleName": "Marie",
+        "LastName": "Wilson",
+        "PhoneNumber": "+27 21 555 2207",
+        "Email": "grace.wilson.za@example.com",
+        "Address": "209 Birch Avenue, Cape Town, South Africa",
+        "DateOfBirth": "2000-08-15"
+    },
+    {
+        "Id": 1008,
+        "FirstName": "Noah",
+        "MiddleName": "Alexander",
+        "LastName": "Hughes",
+        "PhoneNumber": "+55 11 5555 2208",
+        "Email": "noah.hughes.br@example.com",
+        "Address": "63 River Street, Sao Paulo, Brazil",
+        "DateOfBirth": "1979-12-09"
+    },
+    {
+        "Id": 1009,
+        "FirstName": "Olivia",
+        "MiddleName": "Jane",
+        "LastName": "Foster",
+        "PhoneNumber": "+49 30 5555 2209",
+        "Email": "olivia.foster.de@example.com",
+        "Address": "154 Hillcrest Drive, Berlin, Germany",
+        "DateOfBirth": "1985-05-30"
+    },
+    {
+        "Id": 1010,
+        "FirstName": "Liam",
+        "MiddleName": "Robert",
+        "LastName": "Hayes",
+        "PhoneNumber": "+33 1 5555 2210",
+        "Email": "liam.hayes.fr@example.com",
+        "Address": "27 Meadow Court, Paris, France",
+        "DateOfBirth": "1993-03-11"
+    },
+    {
+        "Id": 1011,
+        "FirstName": "Emma",
+        "MiddleName": "Louise",
+        "LastName": "Brooks",
+        "PhoneNumber": "+39 06 5555 2211",
+        "Email": "emma.brooks.it@example.com",
+        "Address": "91 Park Boulevard, Rome, Italy",
+        "DateOfBirth": "1972-10-21"
+    },
+    {
+        "Id": 1012,
+        "FirstName": "James",
+        "MiddleName": "William",
+        "LastName": "Collins",
+        "PhoneNumber": "+31 20 5555 2212",
+        "Email": "james.collins.nl@example.com",
+        "Address": "336 Walnut Street, Amsterdam, Netherlands",
+        "DateOfBirth": "1959-07-05"
+    },
+    {
+        "Id": 1013,
+        "FirstName": "Ava",
+        "MiddleName": "Elizabeth",
+        "LastName": "Turner",
+        "PhoneNumber": "+46 8 5555 2213",
+        "Email": "ava.turner.se@example.com",
+        "Address": "408 Sunset Avenue, Stockholm, Sweden",
+        "DateOfBirth": "2003-04-17"
+    },
+    {
+        "Id": 1014,
+        "FirstName": "Benjamin",
+        "MiddleName": "Thomas",
+        "LastName": "Parker",
+        "PhoneNumber": "+91 11 5555 2214",
+        "Email": "benjamin.parker.in@example.com",
+        "Address": "52 Forest Road, New Delhi, India",
+        "DateOfBirth": "1976-01-26"
+    }
+]

@@ -55,22 +55,22 @@ public class PatientService
 
 
     // Create patient
-    // || Create a new patient using a patientDTO object 
-    public async Task<Patient> CreatePatient(PatientDto patientDto, ProjectDatabaseConnection? context = null)
+    // || Create a new patient using a patient object 
+    public async Task<Patient> CreatePatient(Patient patient, ProjectDatabaseConnection? context = null)
     {
         return await _context.ExecuteAsync(async db =>
         {
             // Creates a patient entity and assigns Patient Dto data to that entity
             Patient entity = new()
             {
-                FirstName = patientDto.FirstName,
-                MiddleName = patientDto.MiddleName,
-                LastName = patientDto.LastName,
-                DateOfBirth = patientDto.DateOfBirth,
-                PhoneNumber = patientDto.PhoneNumber,
-                Email = patientDto.Email,
-                Address = patientDto.Address,
-                IsDisabled = patientDto.IsDisabled,
+                FirstName = patient.FirstName,
+                MiddleName = patient.MiddleName,
+                LastName = patient.LastName,
+                DateOfBirth = patient.DateOfBirth,
+                PhoneNumber = patient.PhoneNumber,
+                Email = patient.Email,
+                Address = patient.Address,
+                IsDisabled = patient.IsDisabled,
                 MedicalOverview = new()
             };
 
