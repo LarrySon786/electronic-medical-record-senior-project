@@ -8,5 +8,6 @@ AUTHENTICATION / AUTHORIZATION
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
 
-
+Once employee services are set-up, we need to attach the employee service operations to the auth service, database seeder, 
+and controller routes
 
