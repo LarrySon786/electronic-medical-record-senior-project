@@ -1,0 +1,41 @@
+[
+    {
+      "id": "test-admin-001",
+      "userName": "test.admin@gmail.com",
+      "email": "test.admin@gmail.com",
+      "emailConfirmed": true,
+      "role": "Admin",
+      "password": "Admin1!",
+      "testEmployeeModel": {
+        "id": 1,
+        "applicationUserId": "test-admin-001",
+        "firstName": "Test Admin"
+      }
+    },
+    {
+      "id": "test-practitioner-001",
+      "userName": "test.practitioner@gmail.com",
+      "email": "test.practitioner@gmail.com",
+      "emailConfirmed": true,
+      "role": "Practitioner",
+      "password": "Practitioner1!",
+      "testEmployeeModel": {
+        "id": 2,
+        "applicationUserId": "test-practitioner-001",
+        "firstName": "Test Practitioner"
+      }
+    },
+    {
+      "id": "test-employee-001",
+      "userName": "test.employee@gmail.com",
+      "email": "test.employee@gmail.com",
+      "emailConfirmed": true,
+      "role": "Employee",
+      "password": "Employee1!",
+      "testEmployeeModel": {
+        "id": 3,
+        "applicationUserId": "test-employee-001",
+        "firstName": "Test Employee"
+      }
+    }
+]

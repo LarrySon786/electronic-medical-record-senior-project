@@ -1,12 +1,67 @@
 ﻿@page "/"
+@layout LoginLayout
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Login</PageTitle>
 
-<h1>Hello, world!</h1>
+@* Login form to access App *@
+<div class="center-content">
+    <div class="standard-card login-card">
+        <form method="post" action="/account/login">
+            <legend>Login</legend>
 
-Welcome to your new app.
+            
+            <div class="form-group mt-4">
+                <label class="form-label">Email</label>
+                <input class="form-control" type="email" name="Email" placeholder="john.doe@example.com"/>
+            </div>
 
-<div class="success">
-    <a class="btn btn-link" href="/colors">View Color Pallete</a>
-    <a class="btn btn-link" href="/reset-db">Reset Database Page (Developer Tool)</a>
+            <div class="form-group mt-4">
+                <label class="form-label">Password</label>
+                <input class="form-control" type="password" name="Password" />
+            </div>
+            @if (Error == "InvalidLogin")
+            {
+                <div class="alert mt-4 mb-0 p-2 pb-0 text-center">
+                    <p>Invalid credentials. Please try again.</p>
+                </div>
+            }
+            <button class="btn btn-primary mt-4" type="submit">Login</button>
+        </form>
+    </div>
 </div>
+<a class="btn btn-link" href="/reset-db">Dev Tools</a>
+
+
+@code {
+    [SupplyParameterFromQuery(Name = "error")] public string Error { get; set; } = string.Empty;
+}
+
+<style>
+    .center-content{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    legend {
+        font-size: 2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 4px solid var(--color-text-label);
+        margin-bottom: 1rem;
+    }
+    .form-control {
+        min-width:300px;
+    }
+    .btn-primary {
+        width:100%;
+    }
+    .btn-link {
+        color:white;
+    }
+    .btn-link:hover {
+        color: rgb(251, 234, 168);
+    }
+    .login-card {
+        max-width: 600px;
+        padding:2rem;
+    }
+</style>
