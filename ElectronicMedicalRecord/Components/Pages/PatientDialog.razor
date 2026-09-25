@@ -57,6 +57,8 @@
                         </div>
                     </div>
 
+                    
+
                     <div class="border-top pt-4 mb-4">
                         <h3 class="h5">Medical Overview</h3>
                         <div class="row g-3 mb-3">
@@ -93,7 +95,11 @@
                 @if (!IsCreating && Patient.IsDisabled)
                 {
                     <div class="alert mb-4" role="status">This patient is disabled and cannot be edited.</div>
+                    <button class="btn btn-primary" type="button" @onclick="Enable">Enable Patient</button>
                 }
+                
+                
+                    
 
                 <div class="d-flex flex-wrap justify-content-between gap-2">
                     <div>
@@ -134,12 +140,26 @@
     [Parameter]
     public EventCallback<Patient> OnDisable { get; set; }
 
+    [Parameter]
+    public EventCallback<Patient> OnEnable { get; set; }
+
     private Task Close() => OnClose.InvokeAsync();
 
     private Task Save() => OnSave.InvokeAsync(Patient);
 
-    private Task Disable() => OnDisable.InvokeAsync(Patient);
+    private async Task Disable()
+    {
+        await OnDisable.InvokeAsync(Patient);
+        Patient.IsDisabled = true;
+    } 
+
+    private async Task Enable()
+    {
+        await OnEnable.InvokeAsync(Patient);
+        Patient.IsDisabled = false;
+    } 
 
     private static string FullName(Patient patient) =>
         $"{patient.FirstName} {patient.MiddleName} {patient.LastName}".Replace("  ", " ").Trim();
+
 }

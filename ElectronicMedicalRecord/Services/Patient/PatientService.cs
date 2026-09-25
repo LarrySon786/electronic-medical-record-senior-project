@@ -56,7 +56,7 @@ public class PatientService
 
     // Create patient
     // || Create a new patient using a patientDTO object 
-    public async Task<Patient> CreatePatient(PatientDto patientDto, ProjectDatabaseConnection? context = null)
+    public async Task<Patient> CreatePatient(Patient patientDto, ProjectDatabaseConnection? context = null)
     {
         return await _context.ExecuteAsync(async db =>
         {
