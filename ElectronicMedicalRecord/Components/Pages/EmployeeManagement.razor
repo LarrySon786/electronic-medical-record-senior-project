@@ -1,0 +1,70 @@
+@page "/admin/employees"
+@rendermode InteractiveServer
+
+<PageTitle>Employee Management</PageTitle>
+
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div><p class="text-uppercase small fw-semibold mb-1" style="color: var(--info-color);">Administration</p><h1 class="mb-1">Employee Management</h1><p class="mb-0 text-muted">Manage everyone who has access to the medical clinic.</p></div>
+        <button class="btn btn-primary" type="button" @onclick="OpenCreateDialog">+ Create New Employee</button>
+    </div>
+    <div class="standard-card">
+        <div class="row align-items-end g-3 mb-4"><div class="col-12 col-md-7 col-lg-5"><label class="form-label fw-semibold" for="employee-search">Search employees</label><input id="employee-search" class="form-control" type="search" placeholder="Search by name, role, or email" @bind="SearchTerm" @bind:event="oninput" /></div><div class="col-auto ms-md-auto text-muted small">@FilteredEmployees.Count employee@(FilteredEmployees.Count == 1 ? "" : "s") shown</div></div>
+        @if (FilteredEmployees.Count == 0)
+        { <div class="info" role="status">No employees match your search.</div> }
+        else
+        {
+            <div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Employee</th><th>Contact</th><th>Role</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr></thead><tbody>
+                @foreach (var employee in FilteredEmployees)
+                { <tr><td><div class="fw-semibold">@FullName(employee)</div><div class="small text-muted">Employee #@employee.Id</div></td><td><div>@employee.Email</div><div class="small text-muted">@employee.PhoneNumber</div></td><td><span class="badge text-bg-info">@employee.Role</span></td><td>@(employee.IsDisabled ? "Disabled" : "Active")</td><td class="text-end"><button class="btn btn-sm btn-secondary" type="button" @onclick="() => OpenEditDialog(employee)">Edit employee</button></td></tr> }
+            </tbody></table></div>
+        }
+    </div>
+</div>
+
+@if (IsDialogOpen)
+{
+    <div class="overlay" role="presentation" @onclick="CloseDialog"><div class="overlay-container" role="dialog" aria-modal="true" aria-labelledby="employee-dialog-title" @onclick:stopPropagation="true"><div class="standard-card w-100 mx-3" style="max-width: 760px; max-height: 90vh; overflow-y: auto;">
+        <div class="d-flex justify-content-between align-items-center mb-3"><h2 id="employee-dialog-title" class="h4 mb-0">@(IsCreating ? "Create New Employee" : "Edit Employee")</h2><button class="btn-close" type="button" aria-label="Close" @onclick="CloseDialog"></button></div>
+        <EditForm Model="ActiveEmployee" OnValidSubmit="SaveEmployee"><DataAnnotationsValidator /><ValidationSummary /><div class="row g-3">
+            <div class="col-md-4"><label class="form-label" for="first-name">First name</label><InputText id="first-name" class="form-control" @bind-Value="ActiveEmployee.FirstName" /></div>
+            <div class="col-md-4"><label class="form-label" for="middle-name">Middle name</label><InputText id="middle-name" class="form-control" @bind-Value="ActiveEmployee.MiddleName" /></div>
+            <div class="col-md-4"><label class="form-label" for="last-name">Last name</label><InputText id="last-name" class="form-control" @bind-Value="ActiveEmployee.LastName" /></div>
+            <div class="col-md-6"><label class="form-label" for="phone">Phone number</label><InputText id="phone" class="form-control" @bind-Value="ActiveEmployee.PhoneNumber" /></div>
+            <div class="col-md-6"><label class="form-label" for="email">Email</label><InputText id="email" type="email" class="form-control" @bind-Value="ActiveEmployee.Email" /></div>
+            <div class="col-12"><label class="form-label" for="address">Address</label><InputText id="address" class="form-control" @bind-Value="ActiveEmployee.Address" /></div>
+            <div class="col-md-4"><label class="form-label" for="birth-date">Date of birth</label><InputDate id="birth-date" class="form-control" @bind-Value="ActiveEmployee.DateOfBirth" /></div>
+            <div class="col-md-4"><label class="form-label" for="role">Role</label><InputSelect id="role" class="form-select" @bind-Value="ActiveEmployee.Role"><option value="@EmployeeRole.Employee">Employee</option><option value="@EmployeeRole.Practitioner">Practitioner</option><option value="@EmployeeRole.Admin">Admin</option></InputSelect></div>
+            <div class="col-md-4 d-flex align-items-end"><div class="form-check mb-2"><InputCheckbox id="disabled" class="form-check-input" @bind-Value="ActiveEmployee.IsDisabled" /><label class="form-check-label" for="disabled">Disable login</label></div></div>
+            <div class="col-12"><label class="form-label" for="password">@(IsCreating ? "Initial password" : "Password")</label><InputText id="password" type="password" class="form-control" @bind-Value="ActiveEmployee.InitialPassword" /><div class="form-text">For now, the admin provides this password to the employee. Email setup can be added later.</div></div>
+        </div><div class="d-flex justify-content-end gap-2 mt-4"><button class="btn btn-secondary" type="button" @onclick="CloseDialog">Cancel</button><button class="btn btn-primary" type="submit">Save employee</button></div></EditForm>
+    </div></div></div>
+}
+
+@code {
+    private string SearchTerm { get; set; } = "";
+    private bool IsDialogOpen { get; set; }
+    private bool IsCreating { get; set; }
+    private Employee ActiveEmployee { get; set; } = new();
+    private List<Employee> Employees { get; } =
+    [
+        new Employee { Id = 1, FirstName = "Jordan", LastName = "Lee", PhoneNumber = "555-0101", Email = "jordan.lee@clinic.example", Address = "1 Main Street", DateOfBirth = new DateTime(1989, 3, 12), Role = EmployeeRole.Admin, InitialPassword = "clinic-demo" },
+        new Employee { Id = 2, FirstName = "Sam", LastName = "Patel", PhoneNumber = "555-0102", Email = "sam.patel@clinic.example", Address = "2 Main Street", DateOfBirth = new DateTime(1992, 7, 24), Role = EmployeeRole.Practitioner, InitialPassword = "clinic-demo" },
+        new Employee { Id = 3, FirstName = "Alex", LastName = "Morgan", PhoneNumber = "555-0103", Email = "alex.morgan@clinic.example", Address = "3 Main Street", DateOfBirth = new DateTime(1987, 11, 5), Role = EmployeeRole.Practitioner, InitialPassword = "clinic-demo" },
+        new Employee { Id = 4, FirstName = "Riley", LastName = "Chen", PhoneNumber = "555-0104", Email = "riley.chen@clinic.example", Address = "4 Main Street", DateOfBirth = new DateTime(1995, 2, 18), Role = EmployeeRole.Employee, InitialPassword = "clinic-demo" },
+        new Employee { Id = 5, FirstName = "Taylor", LastName = "Brooks", PhoneNumber = "555-0105", Email = "taylor.brooks@clinic.example", Address = "5 Main Street", DateOfBirth = new DateTime(1990, 8, 30), Role = EmployeeRole.Employee, InitialPassword = "clinic-demo" },
+        new Employee { Id = 6, FirstName = "Casey", LastName = "Rivera", PhoneNumber = "555-0106", Email = "casey.rivera@clinic.example", Address = "6 Main Street", DateOfBirth = new DateTime(1985, 5, 9), Role = EmployeeRole.Practitioner, InitialPassword = "clinic-demo" },
+        new Employee { Id = 7, FirstName = "Jamie", LastName = "Wilson", PhoneNumber = "555-0107", Email = "jamie.wilson@clinic.example", Address = "7 Main Street", DateOfBirth = new DateTime(1993, 12, 14), Role = EmployeeRole.Employee, InitialPassword = "clinic-demo" },
+        new Employee { Id = 8, FirstName = "Drew", LastName = "Kim", PhoneNumber = "555-0108", Email = "drew.kim@clinic.example", Address = "8 Main Street", DateOfBirth = new DateTime(1988, 6, 21), Role = EmployeeRole.Practitioner, InitialPassword = "clinic-demo" },
+        new Employee { Id = 9, FirstName = "Morgan", LastName = "Davis", PhoneNumber = "555-0109", Email = "morgan.davis@clinic.example", Address = "9 Main Street", DateOfBirth = new DateTime(1996, 1, 27), Role = EmployeeRole.Employee, InitialPassword = "clinic-demo" },
+        new Employee { Id = 10, FirstName = "Avery", LastName = "Thompson", PhoneNumber = "555-0110", Email = "avery.thompson@clinic.example", Address = "10 Main Street", DateOfBirth = new DateTime(1991, 10, 3), Role = EmployeeRole.Employee, InitialPassword = "clinic-demo" },
+        new Employee { Id = 11, FirstName = "Cameron", LastName = "Nguyen", PhoneNumber = "555-0111", Email = "cameron.nguyen@clinic.example", Address = "11 Main Street", DateOfBirth = new DateTime(1986, 4, 16), Role = EmployeeRole.Practitioner, InitialPassword = "clinic-demo" },
+        new Employee { Id = 12, FirstName = "Quinn", LastName = "Adams", PhoneNumber = "555-0112", Email = "quinn.adams@clinic.example", Address = "12 Main Street", DateOfBirth = new DateTime(1994, 9, 7), Role = EmployeeRole.Employee, InitialPassword = "clinic-demo", IsDisabled = true }
+    ];
+    private List<Employee> FilteredEmployees => Employees.Where(employee => string.IsNullOrWhiteSpace(SearchTerm) || $"{FullName(employee)} {employee.Email} {employee.Role}".Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+    private static string FullName(Employee employee) => string.Join(" ", new[] { employee.FirstName, employee.MiddleName, employee.LastName }.Where(value => !string.IsNullOrWhiteSpace(value)));
+    private void OpenCreateDialog() { IsCreating = true; ActiveEmployee = new Employee { Id = Employees.Count == 0 ? 1 : Employees.Max(employee => employee.Id) + 1 }; IsDialogOpen = true; }
+    private void OpenEditDialog(Employee employee) { IsCreating = false; ActiveEmployee = new Employee { Id = employee.Id, FirstName = employee.FirstName, MiddleName = employee.MiddleName, LastName = employee.LastName, PhoneNumber = employee.PhoneNumber, Email = employee.Email, Address = employee.Address, DateOfBirth = employee.DateOfBirth, InitialPassword = employee.InitialPassword, Role = employee.Role, IsDisabled = employee.IsDisabled }; IsDialogOpen = true; }
+    private void CloseDialog() => IsDialogOpen = false;
+    private void SaveEmployee() { var existing = Employees.FirstOrDefault(employee => employee.Id == ActiveEmployee.Id); if (existing is null) Employees.Add(ActiveEmployee); else { var index = Employees.IndexOf(existing); Employees[index] = ActiveEmployee; } CloseDialog(); }
+}
