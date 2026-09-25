@@ -17,14 +17,15 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     public DbSet<Patient> PatientDb { get; set; }
     public DbSet<Medical> MedicalOverviewDb { get; set; }
     public DbSet<Medication> MedicationDb { get; set; }
-
+    public DbSet<TestEmployeeModel> TestEmployeeModelDb { get; set; } // TO test auth logic - Replace with real employee later
+    public DbSet<ApplicationUser> ApplicationUserDb { get; set; } // The identity table for users
 
     // Database Model Builder
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(builder);  // Builds Model relationships between tables
 
-        // Builds Model relationships between tables
+        // Patients
         builder.Entity<Patient>()
             .HasOne(x => x.MedicalOverview)
             .WithOne(x => x.Patient)
@@ -35,6 +36,13 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .HasMany(x => x.Medications)
             .WithOne(x => x.Medical)
             .HasForeignKey(x => x.MedicalId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Auth
+        builder.Entity<TestEmployeeModel>() // Replace with employee model when complete
+            .HasOne(x => x.applicationUser)
+            .WithMany()
+            .HasForeignKey(x => x.applicationUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
     }

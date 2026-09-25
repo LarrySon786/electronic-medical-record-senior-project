@@ -1,0 +1,35 @@
+@inherits LayoutComponentBase
+
+<div>
+    <header>
+        <div></div>
+    </header>
+
+    <main>
+        @Body
+    </main>
+
+    <footer>
+
+    </footer>
+</div>
+
+
+<style>
+    main {
+        @* background-color: var(--primary-color); *@
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        background: 
+            radial-gradient(circle at 15% 20%, 
+                rgba(0, 119, 182, 0.45) 0%, 
+                rgba(0, 119, 182, 0) 40%), 
+            radial-gradient(circle at 85% 80%, 
+                rgba(42, 157, 143, 0.35) 0%, 
+                rgba(42, 157, 143, 0) 45%), 
+            linear-gradient(135deg, var(--primary-color) 0%, #023E8A 45%, var(--info-color) 100%);
+    
+
+</style>

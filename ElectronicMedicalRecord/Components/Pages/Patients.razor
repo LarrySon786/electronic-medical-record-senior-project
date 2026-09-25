@@ -1,6 +1,8 @@
 @page "/patients"
 @rendermode InteractiveServer
+@attribute [Authorize]
 @using ElectronicMedicalRecord.Models
+@using Microsoft.AspNetCore.Authorization
 @inject ElectronicMedicalRecord.Services.PatientService patientService
 
 <PageTitle>Patients</PageTitle>

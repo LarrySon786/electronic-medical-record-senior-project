@@ -12,6 +12,7 @@
 
     --text-color: #243B4A;  /* Dark blue-gray */
     --font-Inter: 'Inter', sans-serif;
+    --color-text-label: #486581;;
 
     --background-color: #F7FAFC; /* Very light cool gray */
     --card-background-color:#FFFFFF;  /* White */
@@ -20,6 +21,8 @@
     --primary-button-hover: #02048c;
 
     --link-color: #0077B6;  /* Primary blue */
+    
+    
 }
 
 
@@ -162,11 +165,13 @@ a:hover, .btn-link:hover {
     background-color: var(--alert-color);
     border: 1px solid #E5A06D;
     border-radius: 0.5rem;
+    align-items: center;
 }
 
 .success {
     position: relative;
     padding: 1rem;
+    align-items: center;
     margin-bottom: 1rem;
     color: var(--text-color);
     background-color: var(--success-color);
@@ -182,6 +187,16 @@ a:hover, .btn-link:hover {
     background-color: var(--info-color);
     border: 1px solid #A8DCE8;
     border-radius: 0.5rem;
+    align-items: center;
+}
+
+/* ***************** */
+/* FORM */
+/* ***************** */
+label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--color-text-label);
 }
 
 
