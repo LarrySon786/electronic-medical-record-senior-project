@@ -73,6 +73,34 @@
                             </div>
                         </div>
 
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-4">
+                                <label class="form-label" for="blood-type">Blood type</label>
+                                <InputText id="blood-type" class="form-control" @bind-Value="MedicalRecord.BloodType" />
+                                <ValidationMessage For="@(() => MedicalRecord.BloodType)" />
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label" for="height">Height</label>
+                                <InputText id="height" class="form-control" placeholder="e.g. 170 cm" @bind-Value="MedicalRecord.Height" />
+                                <ValidationMessage For="@(() => MedicalRecord.Height)" />
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="form-label" for="weight">Weight</label>
+                                <InputText id="weight" class="form-control" placeholder="e.g. 70 kg" @bind-Value="MedicalRecord.Weight" />
+                                <ValidationMessage For="@(() => MedicalRecord.Weight)" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="primary-concern">Primary healthcare concern</label>
+                                <InputTextArea id="primary-concern" class="form-control" @bind-Value="MedicalRecord.PrimaryHealthcareConcern" />
+                                <ValidationMessage For="@(() => MedicalRecord.PrimaryHealthcareConcern)" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="allergies">Allergies</label>
+                                <InputTextArea id="allergies" class="form-control" placeholder="List known allergies or enter None" @bind-Value="MedicalRecord.Allergies" />
+                                <ValidationMessage For="@(() => MedicalRecord.Allergies)" />
+                            </div>
+                        </div>
+
                         @if (MedicalRecord.Medications.Count == 0)
                         {
                             <p class="text-muted mb-0">No medications recorded.</p>
@@ -82,9 +110,13 @@
                             <ul class="list-group list-group-flush">
                                 @foreach (var medication in MedicalRecord.Medications)
                                 {
-                                    <li class="list-group-item px-0">@medication</li>
+                                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center"><span>@medication.Name</span><button class="btn btn-sm btn-outline-danger" type="button" @onclick="() => RemoveMedication(medication)">Remove</button></li>
                                 }
                             </ul>
+                        }
+                        @if (IsCreating || !Patient.IsDisabled)
+                        {
+                            <div class="input-group mt-3"><InputText class="form-control" placeholder="Add medication" @bind-Value="NewMedicationName" /><button class="btn btn-secondary" type="button" @onclick="AddMedication">Add medication</button></div>
                         }
                     </div>
                 </fieldset>
@@ -138,6 +170,19 @@
     private Task Save() => OnSave.InvokeAsync(Patient);
 
     private Task Disable() => OnDisable.InvokeAsync(Patient);
+
+    private string NewMedicationName { get; set; } = "";
+
+    private void AddMedication()
+    {
+        if (!string.IsNullOrWhiteSpace(NewMedicationName))
+        {
+            MedicalRecord.Medications.Add(new Medication { Name = NewMedicationName.Trim() });
+            NewMedicationName = "";
+        }
+    }
+
+    private void RemoveMedication(Medication medication) => MedicalRecord.Medications.Remove(medication);
 
     private static string FullName(Patient patient) =>
         $"{patient.FirstName} {patient.MiddleName} {patient.LastName}".Replace("  ", " ").Trim();
