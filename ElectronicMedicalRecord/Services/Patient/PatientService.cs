@@ -108,7 +108,7 @@ public class PatientService
             entity.IsDisabled = updated.IsDisabled;
 
             // Add Medications Update
-            // Add this once medication management is added (if we do add that)
+            entity.MedicalOverview!.Medications = updated.MedicalOverview!.Medications;
 
             // Save changes and return
             await db.SaveChangesAsync();
@@ -132,6 +132,8 @@ public class PatientService
             await db.SaveChangesAsync();
         }, context);
     }
+
+
 
     // Validate Patient Data is sound
     // || This method is used to affirm that patient data is safe and valid before adding it to the database.
