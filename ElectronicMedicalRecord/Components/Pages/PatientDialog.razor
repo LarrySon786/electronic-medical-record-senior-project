@@ -1,5 +1,6 @@
 @using System.ComponentModel.DataAnnotations
 @using ElectronicMedicalRecord.Models
+@using ElectronicMedicalRecord.Models
 @using ElectronicMedicalRecord.Services
 @inject PatientService patientService
 
@@ -134,6 +135,9 @@
                     <div class="alert mb-4" role="status">This patient is disabled and cannot be edited.</div>
                     <button class="btn btn-primary" type="button" @onclick="Enable">Enable Patient</button>
                 }
+                
+                
+                    
 
                 <div class="d-flex flex-wrap justify-content-between gap-2">
                     <div>
