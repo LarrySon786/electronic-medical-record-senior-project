@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ElectronicMedicalRecord.Database.Models;
+namespace ElectronicMedicalRecord.Models;
 
 public class TestConnection
 {
