@@ -13,10 +13,11 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     }
 
     // Database Tables
-    public DbSet<TestConnection> TestConnectionDb{ get; set; } // Table in database to test that database settings are correct
+    public DbSet<TestConnection> TestConnectionDb { get; set; } // Table in database to test that database settings are correct
     public DbSet<Patient> PatientDb { get; set; }
     public DbSet<Medical> MedicalOverviewDb { get; set; }
     public DbSet<Medication> MedicationDb { get; set; }
+    public DbSet<Employee> EmployeeDb { get; set; }
 
 
     // Database Model Builder
@@ -35,6 +36,12 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .HasMany(x => x.Medications)
             .WithOne(x => x.Medical)
             .HasForeignKey(x => x.MedicalId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Employee>()
+            .HasOne(x => x.ApplicationUser)
+            .WithOne(x => x.Employee)
+            .HasForeignKey<Employee>(x => x.ApplicationUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
     }
