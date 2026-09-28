@@ -1,0 +1,41 @@
+*   [33m1491646[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #11 from LarrySon786/add-patient-management-pages
+[31m|[m[32m\[m  
+[31m|[m *   [33m2df8c49[m[33m ([m[1;31morigin/add-patient-management-pages[m[33m)[m Merge branch 'main' into add-patient-management-pages
+[31m|[m [33m|[m[31m\[m  
+[31m|[m [33m|[m[31m/[m  
+[31m|[m[31m/[m[33m|[m   
+[31m|[m * [33ma85de8c[m Add patient and employee management workflows
+[31m|[m [34m|[m * [33m28707cc[m[33m ([m[1;31morigin/authentication-authorization-br[m[33m, [m[1;32mauthentication-authorization-br[m[33m)[m Finished Authentication and Authorization (with the exception of not having hooked an employee service up yet). Created Data seeding services to seed developer data and test that other services are functioning. Created Controller for login requests. Created CSS for login page. Added to Dev-tools the login info for users. Added [Authorization] for Patients route. Added logout feature to navigation menu.
+[31m|[m [34m|[m * [33m069cbdc[m Patient Service hooked up to app patient listings. Patient Dialog hooked up. Added patient data seeder. Seeding data works on clicking database reset
+[31m|[m [34m|[m *   [33ma1074c6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmodel-to-patient-page-bug-fixes-br[m[33m, [m[1;31morigin/model-to-patient-page-bug-fixes-br[m[33m)[m Merged the latest 'main' changes to this branch
+[31m|[m [34m|[m [36m|[m[31m\[m  
+[31m|[m [34m|[m[31m_[m[36m|[m[31m/[m  
+[31m|[m[31m/[m[34m|[m [36m|[m   
+* [34m|[m [36m|[m [33m259bc99[m Merge pull request #8 from LarrySon786/add-patient-management-pages
+[1;32m|[m[34m\[m[34m|[m [36m|[m 
+[1;32m|[m * [36m|[m [33m7b91bf8[m Improve medical overview display in patient dialog
+[1;32m|[m [1;33m|[m * [33m98a66be[m There were some bugs that arose from recent merges. Mostly name spaces and duplicate models. Fixed with this commit
+[1;32m|[m [1;33m|[m[1;32m/[m  
+[1;32m|[m[1;32m/[m[1;33m|[m   
+* [1;33m|[m   [33mf2dd45d[m Merge pull request #4 from LarrySon786/patient-service-br
+[1;34m|[m[1;35m\[m [1;33m\[m  
+[1;34m|[m * [1;33m|[m [33m66ffb47[m[33m ([m[1;31morigin/patient-service-br[m[33m)[m Add Patient Service
+* [1;35m|[m [1;33m|[m   [33md109ef4[m Merge pull request #6 from LarrySon786/add-patient-management-pages
+[1;35m|[m[1;33m\[m [1;35m\[m [1;33m\[m  
+[1;35m|[m [1;33m|[m[1;35m/[m [1;33m/[m  
+[1;35m|[m[1;35m/[m[1;33m|[m [1;33m/[m   
+[1;35m|[m [1;33m|[m[1;33m/[m    
+[1;35m|[m * [33m9813329[m Add patient management pages and dialog
+[1;35m|[m[1;35m/[m  
+*   [33mdbe5539[m Merge pull request #2 from LarrySon786/Initialize-Database-br
+[32m|[m[33m\[m  
+* [33m\[m   [33m4b3ab50[m Merge pull request #3 from LarrySon786/alexspring1
+[34m|[m[35m\[m [33m\[m  
+[34m|[m * [33m|[m [33mc37d4ec[m[33m ([m[1;31morigin/alexspring1[m[33m)[m updated navigation menu by adding active link css
+[34m|[m * [33m|[m [33mac64f5c[m completed creation of patient models
+[34m|[m * [33m|[m [33m9edd46e[m completed Navigation menu
+[34m|[m[34m/[m [33m/[m  
+[34m|[m [33m|[m * [33m20c2189[m[33m ([m[1;32mpatient-service-br[m[33m)[m Add Patient Service
+[34m|[m [33m|[m[33m/[m  
+[34m|[m * [33m57806c7[m[33m ([m[1;31morigin/patient-services-br[m[33m, [m[1;31morigin/Initialize-Database-br[m[33m, [m[1;32mpatient-services-br[m[33m, [m[1;32mInitialize-Database-br[m[33m)[m Initialized all database settings and context code
+[34m|[m[34m/[m  

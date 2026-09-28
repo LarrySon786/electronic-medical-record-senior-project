@@ -3,6 +3,7 @@ using System;
 using ElectronicMedicalRecord.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ElectronicMedicalRecord.Migrations
 {
     [DbContext(typeof(ProjectDatabaseConnection))]
-    partial class ProjectDatabaseConnectionModelSnapshot : ModelSnapshot
+    [Migration("20260925195439_AdjustingMedicalOverview")]
+    partial class AdjustingMedicalOverview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,29 +222,6 @@ namespace ElectronicMedicalRecord.Migrations
                     b.ToTable("TestConnectionDb");
                 });
 
-            modelBuilder.Entity("ElectronicMedicalRecord.Models.TestEmployeeModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("applicationUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("applicationUserId");
-
-                    b.ToTable("TestEmployeeModelDb");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -394,17 +374,6 @@ namespace ElectronicMedicalRecord.Migrations
                         .IsRequired();
 
                     b.Navigation("Medical");
-                });
-
-            modelBuilder.Entity("ElectronicMedicalRecord.Models.TestEmployeeModel", b =>
-                {
-                    b.HasOne("ElectronicMedicalRecord.Models.ApplicationUser", "applicationUser")
-                        .WithMany()
-                        .HasForeignKey("applicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("applicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

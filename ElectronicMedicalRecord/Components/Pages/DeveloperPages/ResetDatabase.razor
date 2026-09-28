@@ -2,10 +2,19 @@
 @rendermode InteractiveServer
 @inject ElectronicMedicalRecord.Services.Database.ResetDatabase resetDatabaseService
 
+@* Dev tools navigation *@
+<h1>Dev-Tools</h1>
+<div class="success dev-tools">
+    <a class="btn btn-link" href="/colors">View Color Pallete</a>
+    <a class="btn btn-link" href="/reset-db">Reset Database Page (Developer Tool)</a>
+</div>
 
 @* RESET DATABASE BUTTON *@
-<button class="btn btn-primary mt-4 mb-4" @onclick="ResetDatabaseButton">Reset My Local Database</button>
-
+<h2>Database Testing</h2>
+<div>
+    <button class="btn btn-primary mt-4 mb-4" @onclick="ResetDatabaseButton">Reset My Local Database</button>
+    <a class="btn btn-link" href="/database/test">Test database connection</a>
+</div>
 <div>
     @if(!string.IsNullOrWhiteSpace(Error)) {
         <div class="alert">
@@ -21,9 +30,8 @@
 </div>
 
 @* Test your database connection feature *@
-<div class="mt-4">
-    <a class="btn btn-link" href="/database/test">Test database connection</a>
-    <div class="info">
+<div>
+    <div class="info mb-4">
         <p >
             Note, that each developer must create a local database using User Secrets. Please name the database like so:
         </p>   
@@ -34,6 +42,28 @@
     </div>
 </div>
 
+@* User Login info *@
+
+<h2 class="mb-4">Login Information</h2>
+<div class="login-cards mt-4">
+    <div class="form-group standard-card mb-4">
+        <p>Admin</p>
+        <p>Email: test.admin@gmail.com</p>
+        <p>Password: Admin1!</p>
+    </div>
+
+    <div class="form-group standard-card mb-4">
+        <p>Practitioner</p>
+        <p>Email: test.practitioner@gmail.com</p>
+        <p>Password: Practitioner1!</p>
+    </div>
+
+    <div class="form-group standard-card mb-4">
+        <p>Employee</p>
+        <p>Email: test.employee@gmail.com</p>
+        <p>Password: Employee1!</p>
+    </div>
+</div>
 
 
 @code {
@@ -55,3 +85,14 @@
         }
     }
 }
+
+<style>
+    .form-group {
+        width:300px;
+    }
+    .login-cards {
+        display:grid;
+        grid-template-columns: 300px 300px 300px;
+        grid-gap: 1rem;
+    }
+</style>
