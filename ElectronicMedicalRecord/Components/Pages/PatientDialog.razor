@@ -1,5 +1,3 @@
-@using System.ComponentModel.DataAnnotations
-@using ElectronicMedicalRecord.Models
 @using ElectronicMedicalRecord.Models
 @using ElectronicMedicalRecord.Services
 @inject PatientService patientService
@@ -65,56 +63,58 @@
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-sm-4">
                                 <div class="small text-muted">Record ID</div>
-                                <div class="fw-semibold">@(MedicalRecord.Id == 0 ? "Not saved" : MedicalRecord.Id)</div>
+                                    <div class="fw-semibold">@(Patient.MedicalOverview!.Id == 0 ? "Not saved" :
+                                                                            Patient.MedicalOverview.Id)</div>
                             </div>
                             <div class="col-12 col-sm-4">
                                 <div class="small text-muted">Patient ID</div>
-                                <div class="fw-semibold">@MedicalRecord.PatientId</div>
+                                <div class="fw-semibold">@Patient.MedicalOverview.PatientId</div>
                             </div>
                             <div class="col-12 col-sm-4">
                                 <div class="small text-muted">Medications</div>
-                                <div class="fw-semibold">@MedicalRecord.Medications.Count</div>
+                                        <div class="fw-semibold">@Patient.MedicalOverview.Medications.Count</div>
                             </div>
 
                                 <div class="row g-3 mb-3">
                                     <div class="col-12 col-md-4">
                                         <label class="form-label" for="blood-type">Blood type</label>
                                         <InputText id="blood-type" class="form-control"
-                                                   @bind-Value="MedicalRecord.BloodType" />
-                                        <ValidationMessage For="@(() => MedicalRecord.BloodType)" />
+                                                       @bind-Value="Patient.MedicalOverview.BloodType" />
+                                            <ValidationMessage For="@(() => Patient.MedicalOverview.BloodType)" />
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="form-label" for="height">Height</label>
                                         <InputText id="height" class="form-control" placeholder="e.g. 170 cm"
-                                                   @bind-Value="MedicalRecord.Height" />
-                                        <ValidationMessage For="@(() => MedicalRecord.Height)" />
+                                                       @bind-Value="Patient.MedicalOverview.Height" />
+                                            <ValidationMessage For="@(() => Patient.MedicalOverview.Height)" />
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="form-label" for="weight">Weight</label>
                                         <InputText id="weight" class="form-control" placeholder="e.g. 70 kg"
-                                                   @bind-Value="MedicalRecord.Weight" />
-                                        <ValidationMessage For="@(() => MedicalRecord.Weight)" />
+                                                       @bind-Value="Patient.MedicalOverview.Weight" />
+                                            <ValidationMessage For="@(() => Patient.MedicalOverview.Weight)" />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label" for="primary-concern">Primary healthcare concern</label>
                                         <InputTextArea id="primary-concern" class="form-control"
-                                                       @bind-Value="MedicalRecord.PrimaryHealthcareConcern" />
-                                        <ValidationMessage For="@(() => MedicalRecord.PrimaryHealthcareConcern)" />
+                                                           @bind-Value="Patient.MedicalOverview.PrimaryHealthcareConcern" />
+                                            <ValidationMessage
+                                            For="@(() => Patient.MedicalOverview.PrimaryHealthcareConcern)" />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label" for="allergies">Allergies</label>
                                         <InputTextArea id="allergies" class="form-control"
                                                        placeholder="List known allergies or enter None"
-                                                       @bind-Value="MedicalRecord.Allergies" />
-                                        <ValidationMessage For="@(() => MedicalRecord.Allergies)" />
+                                                           @bind-Value="Patient.MedicalOverview.Allergies" />
+                                            <ValidationMessage For="@(() => Patient.MedicalOverview.Allergies)" />
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">Medications</label>
-                                        <InputText @bind-Value="selectedMedication.name" class="form-control mb-2" />
+                                        <InputText @bind-Value="newMedication.name" class="form-control mb-2" />
                                         <button class="btn btn-primary" @onclick="UpdateMedication">Add Medication</button>
                                     </div>
                                     <ul class="list-group list-group-flush">
-                                        @foreach (var medication in MedicalRecord.Medications)
+                                            @foreach (var medication in Patient.MedicalOverview.Medications)
                                         {
                                             <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
                                                 <span>@medication.name</span><button class="btn btn-sm btn-outline-danger" type="button"
@@ -161,9 +161,7 @@
     [Parameter, EditorRequired]
     public Patient Patient { get; set; } = new();
 
-    [Parameter, EditorRequired]
-    public Medical MedicalRecord { get; set; } = new();
-    public Medication selectedMedication { get; set; } = new();
+    public Medication newMedication { get; set; } = new();
 
     [Parameter]
     public bool IsCreating { get; set; }
@@ -216,9 +214,9 @@
     {
         try
         {
-            Patient.MedicalOverview!.Medications.Add(selectedMedication);
+            Patient.MedicalOverview!.Medications.Add(newMedication);
             await patientService.UpdatePatient(Patient);
-            selectedMedication = new();
+            newMedication = new();
         }
         catch(Exception ex)
         {
