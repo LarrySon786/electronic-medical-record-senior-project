@@ -8,5 +8,6 @@ namespace ElectronicMedicalRecord.Models;
 
 public class ApplicationUser : IdentityUser
 {
-    
+    public int EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
 }

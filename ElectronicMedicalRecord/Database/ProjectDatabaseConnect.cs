@@ -13,10 +13,12 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     }
 
     // Database Tables
-    public DbSet<TestConnection> TestConnectionDb{ get; set; } // Table in database to test that database settings are correct
+    public DbSet<TestConnection> TestConnectionDb { get; set; } // Table in database to test that database settings are correct
     public DbSet<Patient> PatientDb { get; set; }
     public DbSet<Medical> MedicalOverviewDb { get; set; }
     public DbSet<Medication> MedicationDb { get; set; }
+    public DbSet<Employee> EmployeeDb { get; set; }
+
     public DbSet<TestEmployeeModel> TestEmployeeModelDb { get; set; } // TO test auth logic - Replace with real employee later
     public DbSet<ApplicationUser> ApplicationUserDb { get; set; } // The identity table for users
 
@@ -38,6 +40,10 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .HasForeignKey(x => x.MedicalId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Entity<Employee>()
+            .HasOne(x => x.ApplicationUser)
+            .WithOne(x => x.Employee)
+            .HasForeignKey<Employee>(x => x.ApplicationUserId)
         // Auth
         builder.Entity<TestEmployeeModel>() // Replace with employee model when complete
             .HasOne(x => x.applicationUser)

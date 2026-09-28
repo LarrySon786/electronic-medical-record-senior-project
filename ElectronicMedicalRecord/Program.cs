@@ -39,6 +39,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 // SCOPED SERVICES
 builder.Services.AddScoped<DbContextFactoryHelper>(); // This is a data base context builder helper service.
+
+builder.Services.AddScoped<SeedData>(); // Allows methods to seed data for development
+builder.Services.AddScoped<ResetDatabase>(); // Allows reseting database for developers
+builder.Services.AddScoped<TestConnectionService>(); // A temporary service to test Database connections.
 builder.Services.AddScoped<AuthService>(); // Authenticaion and Authorization actions
 builder.Services.AddControllers(); // This establishes controllers for the app
 builder.Services.AddScoped<PatientService>(); // Allows operations with patient data / objects. Included CRUD operations
