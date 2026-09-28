@@ -21,7 +21,7 @@ public class AuthService
     }
 
     // Get Current User Async | Will return employee model once it is added } Using test model temporarily
-    public async Task<TestEmployeeModel?> GetCurrentUserAsync(ProjectDatabaseConnection? context = null)
+    public async Task<Employee?> GetCurrentUserAsync(ProjectDatabaseConnection? context = null)
     {
         return await _factory.ExecuteAsync(async db =>
         {
@@ -30,9 +30,9 @@ public class AuthService
 
             if (identity == null) return null;
 
-            return await db.TestEmployeeModelDb
-                .Include(x => x.applicationUser)
-                .FirstOrDefaultAsync(x => x.applicationUser!.Id == identity);
+            return await db.EmployeeDb
+                .Include(x => x.ApplicationUser)
+                .FirstOrDefaultAsync(x => x.ApplicationUser!.Id == identity);
         }, context);
     }
 

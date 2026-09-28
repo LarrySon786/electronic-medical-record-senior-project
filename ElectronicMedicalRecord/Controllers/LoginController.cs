@@ -1,5 +1,6 @@
 using ElectronicMedicalRecord.Database;
 using ElectronicMedicalRecord.Models;
+using ElectronicMedicalRecord.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,16 @@ public class LoginController : ControllerBase
     private readonly IDbContextFactory<ProjectDatabaseConnection> _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly EmployeeService _employeeService;
 
     public LoginController(IDbContextFactory<ProjectDatabaseConnection> context,
-        UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+        EmployeeService employeeService)
     {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
+        _employeeService = employeeService;
     }
 
     [HttpPost("login")]
@@ -37,8 +41,8 @@ public class LoginController : ControllerBase
         if (string.IsNullOrEmpty(password)) return Results.Redirect("/?error=InvalidLogin");
 
         // Verify user disabled / enabled status
-        // var user = await employeeService.GetEmployeeByEmail(email); // Verify user exists to verify if disabled
-        // if (user == null || user.IsDisabled == true || user.IdentityUser == null) return Results.Redirect("/login?error=true");
+        var user = await _employeeService.GetEmployeeByEmailAsync(email); // Verify user exists to verify if disabled
+        if (user == null || user.IsDisabled == true || user.ApplicationUser == null) return Results.Redirect("/login?error=true");
 
         // Sign user in
         var result = await _signInManager.PasswordSignInAsync(email, password, true, false); // Sign-in User

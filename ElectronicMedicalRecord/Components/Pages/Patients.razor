@@ -2,7 +2,6 @@
 @rendermode InteractiveServer
 @attribute [Authorize]
 @using ElectronicMedicalRecord.Models
-@using Microsoft.AspNetCore.Authorization
 @inject ElectronicMedicalRecord.Services.PatientService patientService
 
 <PageTitle>Patients</PageTitle>
@@ -116,25 +115,6 @@
             || patient.PhoneNumber.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
             || patient.Email.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
         .ToList();
-
-    private static string CountryFor(Patient patient) => patient.Id switch
-    {
-        1001 => "Canada",
-        1002 => "Japan",
-        1003 => "Spain",
-        1004 => "United Kingdom",
-        1005 => "Australia",
-        1006 => "United States",
-        1007 => "South Africa",
-        1008 => "Brazil",
-        1009 => "Germany",
-        1010 => "France",
-        1011 => "Italy",
-        1012 => "Netherlands",
-        1013 => "Sweden",
-        1014 => "India",
-        _ => "Unknown"
-    };
 
     protected override async Task OnInitializedAsync()
     {

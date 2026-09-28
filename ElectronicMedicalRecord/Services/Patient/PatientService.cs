@@ -59,6 +59,9 @@ public class PatientService
     {
         return await _context.ExecuteAsync(async db =>
         {
+            // Ensures medical overview filled out
+            if (patient.MedicalOverview == null) throw new Exception("Could not create patient. No medical overview attached");
+
             // Creates a patient entity and assigns Patient Dto data to that entity
             Patient entity = new()
             {
@@ -71,7 +74,21 @@ public class PatientService
                 Address = patient.Address,
                 IsDisabled = patient.IsDisabled,
                 MedicalOverview = new()
+                {
+                    BloodType = patient.MedicalOverview.BloodType,
+                    Height = patient.MedicalOverview.Height,
+                    Weight = patient.MedicalOverview.Weight,
+                    PrimaryHealthcareConcern = patient.MedicalOverview.PrimaryHealthcareConcern,
+                    Allergies = patient.MedicalOverview.Allergies,
+                    Medications = new()
+                }
             };
+
+            // Prepare medications for database entity
+            foreach (Medication medication in patient.MedicalOverview.Medications)
+            {
+                entity.MedicalOverview.Medications.Add(medication);
+            }
 
             // Server side validation
             ServerValidatePatient(entity);
@@ -90,8 +107,12 @@ public class PatientService
     {
         return await _context.ExecuteAsync(async db =>
         {
+            // Ensures medical overview filled out
+            if (updated.MedicalOverview == null) throw new Exception("Could not update patient. No medical overview attached");
+
             Patient? entity = await GetPatientById(updated.Id, db);
-            if (entity == null) throw new InvalidOperationException("No existing patient found to update");
+            if (entity == null || entity.MedicalOverview == null) throw new InvalidOperationException("No existing patient found to update");
+
 
             // Server side validation
             ServerValidatePatient(updated);
@@ -106,8 +127,15 @@ public class PatientService
             entity.DateOfBirth = updated.DateOfBirth;
             entity.IsDisabled = updated.IsDisabled;
 
+            // Medical Overview Data
+            entity.MedicalOverview.BloodType = updated.MedicalOverview.BloodType;
+            entity.MedicalOverview.Weight = updated.MedicalOverview.Weight;
+            entity.MedicalOverview.Height = updated.MedicalOverview.Height;
+            entity.MedicalOverview.PrimaryHealthcareConcern = updated.MedicalOverview.PrimaryHealthcareConcern;
+            entity.MedicalOverview.Allergies = updated.MedicalOverview.Allergies;
+
             // Add Medications Update
-            entity.MedicalOverview!.Medications = updated.MedicalOverview!.Medications;
+            entity.MedicalOverview.Medications = updated.MedicalOverview.Medications;
 
             // Save changes and return
             await db.SaveChangesAsync();

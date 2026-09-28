@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ElectronicMedicalRecord.Models.Dtos;
 
 namespace ElectronicMedicalRecord.DTOs;
 
@@ -8,6 +9,9 @@ public class UpdateEmployeeDto
 
     [Required]
     public string FirstName { get; set; } = "";
+
+    [Required, StringLength(25)]
+    public string MiddleName { get; set; } = "";
 
     [Required]
     public string LastName { get; set; } = "";

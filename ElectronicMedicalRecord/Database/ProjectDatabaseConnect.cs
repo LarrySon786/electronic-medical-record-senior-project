@@ -18,8 +18,6 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     public DbSet<Medical> MedicalOverviewDb { get; set; }
     public DbSet<Medication> MedicationDb { get; set; }
     public DbSet<Employee> EmployeeDb { get; set; }
-
-    public DbSet<TestEmployeeModel> TestEmployeeModelDb { get; set; } // TO test auth logic - Replace with real employee later
     public DbSet<ApplicationUser> ApplicationUserDb { get; set; } // The identity table for users
 
     // Database Model Builder
@@ -43,14 +41,7 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
         builder.Entity<Employee>()
             .HasOne(x => x.ApplicationUser)
             .WithOne(x => x.Employee)
-            .HasForeignKey<Employee>(x => x.ApplicationUserId)
-        // Auth
-        builder.Entity<TestEmployeeModel>() // Replace with employee model when complete
-            .HasOne(x => x.applicationUser)
-            .WithMany()
-            .HasForeignKey(x => x.applicationUserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
+            .HasForeignKey<Employee>(x => x.ApplicationUserId);
     }
 
 }
