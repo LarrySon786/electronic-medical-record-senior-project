@@ -111,15 +111,14 @@
                                     <div class="col-12">
                                         <label class="form-label">Medications</label>
                                         <InputText @bind-Value="newMedication.name" class="form-control mb-2" />
-                                        <button class="btn btn-primary" @onclick="UpdateMedication">Add Medication</button>
+                                        <button class="btn btn-primary" type="button" @onclick="UpdateMedication">Add Medication</button>
                                     </div>
                                     <ul class="list-group list-group-flush">
-                                            @foreach (var medication in Patient.MedicalOverview.Medications)
+                                        @foreach (var medication in Patient.MedicalOverview.Medications)
                                         {
                                             <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
                                                 <span>@medication.name</span><button class="btn btn-sm btn-outline-danger" type="button"
                                                                                         @onclick="() => RemoveMedication(medication)">Remove</button></li>
-                                            <li class="list-group-item px-0">@medication</li>
                                         }
                                     </ul>
                                 </div>
@@ -201,6 +200,7 @@
     {
         try
         {
+            Patient.MedicalOverview!.Medications.Remove(medication);
             await patientService.UpdatePatient(Patient);
         }
         catch (Exception ex)
