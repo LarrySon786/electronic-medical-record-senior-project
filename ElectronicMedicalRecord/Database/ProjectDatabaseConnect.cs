@@ -19,6 +19,8 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     public DbSet<Medication> MedicationDb { get; set; }
     public DbSet<Employee> EmployeeDb { get; set; }
     public DbSet<ApplicationUser> ApplicationUserDb { get; set; } // The identity table for users
+    public DbSet<Message> MessageDb { get; set; }
+    public DbSet<Chat> ChatDb { get; set; }
 
     // Database Model Builder
     protected override void OnModelCreating(ModelBuilder builder)
@@ -42,6 +44,16 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .HasOne(x => x.ApplicationUser)
             .WithOne(x => x.Employee)
             .HasForeignKey<Employee>(x => x.ApplicationUserId);
+
+        builder.Entity<Message>()
+            .HasOne(x => x.Chat)
+            .WithMany(x => x.Messages)
+            .HasForeignKey(x => x.ChatId);
+
+        builder.Entity<Message>()
+            .HasOne(x => x.Employee)
+            .WithOne()
+            .HasForeignKey<Message>(x => x.EmployeeId);
     }
 
 }

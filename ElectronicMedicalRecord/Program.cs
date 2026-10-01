@@ -1,5 +1,6 @@
 using ElectronicMedicalRecord.Components;
 using ElectronicMedicalRecord.Database;
+using ElectronicMedicalRecord.Hubs;
 using ElectronicMedicalRecord.Models;
 using ElectronicMedicalRecord.Services;
 using ElectronicMedicalRecord.Services.Database;
@@ -43,6 +44,9 @@ builder.Services.AddScoped<AuthService>(); // Authenticaion and Authorization ac
 builder.Services.AddControllers(); // This establishes controllers for the app
 builder.Services.AddScoped<PatientService>(); // Allows operations with patient data / objects. Included CRUD operations
 builder.Services.AddScoped<EmployeeService>(); // Allows operations with employee data.
+builder.Services.AddScoped<MessageService>(); // Allows operations with chat.
+builder.Services.AddSignalR(); // SIGNALR: real-time communication used by the chat (ChatHub)
+builder.Services.AddHttpContextAccessor(); // Gives access to the current HTTP request (e.g. the user's cookie).
 
 // SCOPED Seed Services
 builder.Services.AddScoped<TestConnectionService>(); // A temporary service to test Database connections.
@@ -52,8 +56,8 @@ builder.Services.AddScoped<PatientSeeder>(); // Seeds patient data
 builder.Services.AddScoped<RoleSeeder>(); // Seeds role data
 builder.Services.AddScoped<EmployeeSeeder>(); // Seeds employee data
 
-
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -71,6 +75,8 @@ app.UseAuthorization(); // Allows authorization operations
 app.UseAntiforgery();
 
 app.MapControllers(); // Allows controller routes to be hit
+app.MapHub<ChatHub>("/chathub"); //SignalR chat hub, reachable at /chathub
+
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
