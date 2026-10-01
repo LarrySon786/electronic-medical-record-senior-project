@@ -1,0 +1,192 @@
+@page "/patient/chart/{Id:int}"
+@using System.ComponentModel.DataAnnotations
+@using ElectronicMedicalRecord.Models
+@using ElectronicMedicalRecord.Models.Enums
+@using ElectronicMedicalRecord.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
+@rendermode InteractiveServer
+@inject ChartService chartService
+@inject PatientService patientService
+
+
+@if (chart == null || chart.Patient == null || user == null)
+{
+    <p>Loading chart...</p>
+}
+else
+{
+    <div class="chart-page">
+        <div class="standard-card patient-data">
+            
+            @* Display patient Info *@
+            <h1>@chart.Patient.FirstName @chart.Patient.LastName</h1>
+            <p><span class="weighted">Date of Birth:</span> @chart.Patient.DateOfBirth</p>
+            
+            @* Display patient medical overview *@
+            <div>
+                <p><span class="weighted">Blood Type:</span> @chart.Patient.MedicalOverview.BloodType</p>
+                <p><span class="weighted">Height:</span> @chart.Patient.MedicalOverview.Height</p>
+                <p><span class="weighted">Weight::</span> @chart.Patient.MedicalOverview.Weight</p>
+                <p><span class="weighted">Allergies:</span> @chart.Patient.MedicalOverview.Allergies</p>
+                <p><span class="weighted">Primary Health Concern:</span> @chart.Patient.MedicalOverview.PrimaryHealthcareConcern</p>
+            </div>
+        </div>
+
+        @* Display Note Sections (form) *@
+        <div class="form-data">
+            <EditForm Model="chart" OnValidSubmit="HandleSubmit" FormName="SaveChart">
+                <DataAnnotationsValidator/>
+
+                @* Chart Info *@
+                <div class="chart-data">
+                    <p class="text-muted">Practitioner: @chart.Practitioner.FirstName @chart.Practitioner.LastName</p>
+                    <p class="text-muted">Chart Created: @chart.DateCreated</p>
+                    <p class="text-muted">Chart Id: @chart.Id</p>
+                </div>
+
+                @* Subjective *@
+                <div class="form-group">
+                    <label class="form-label">Subjective Notes</label>
+                        <InputTextArea class="form-control" @bind-Value="chart.SubjectiveNotes"
+                                       disabled="@(Mode == EditMode.View)" />
+                </div>
+
+                @* Objective *@
+                <div class="form-group">
+                    <label class="form-label">Objective Notes</label>
+                        <InputTextArea class="form-control" @bind-Value="chart.ObjectiveNotes"
+                                       disabled="@(Mode == EditMode.View)" />
+                </div>
+
+                @* Assesment *@
+                <div class="form-group">
+                    <label class="form-label">Assesment</label>
+                        <InputTextArea class="form-control" @bind-Value="chart.Assesment" disabled="@(Mode == EditMode.View)" />
+                </div>
+
+                @* Plan *@
+                <div class="form-group">
+                    <label class="form-label">Plan and Treatment</label>
+                    <InputTextArea class="form-control" @bind-Value="chart.Plan" disabled="@(Mode == EditMode.View)" />
+                </div>
+
+
+                <ValidationSummary />
+                @if(!string.IsNullOrWhiteSpace(error))
+                {
+                    <p class="alert">@error</p>
+                }
+                else if (!string.IsNullOrWhiteSpace(message))
+                {
+                        <p class="success" @onclick="ClearMessages">✖️ @message</p>
+                }
+                @if (Mode == EditMode.Edit)
+                {
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                }
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    public Chart? chart { get; set; }
+    public Employee? user { get; set; }
+    private string error { get; set; } = string.Empty;
+    private string message { get; set; } = string.Empty;
+    private EditMode Mode { get; set; } = EditMode.Edit;
+
+    protected override async Task OnInitializedAsync()
+    {
+        @* Verify that user is chart's practitioner *@
+        try
+        {
+            user = await authState.GetCurrentUserAsync();
+            if (user == null)
+            {
+                navigationManager.NavigateTo("/?error=NotLoggedIn", forceLoad: true);
+                return;
+            }
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Could not load charts. User not logged in. Ex: {ex}");
+        }
+
+        @* Fetch patient data and chart data *@
+        try
+        {
+            chart = await chartService.GetChartById(Id);
+            if (chart == null || chart.PractitionerId != user!.Id)
+            {
+                Mode = EditMode.View;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not find patient or matching chart with this Id. Ex: {ex}");
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        ClearMessages();
+
+        try
+        {
+            await chartService.UpdateChart(chart!);
+            message = "Successful Save.";
+        }
+        catch (ValidationException ex)
+        {
+            error = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            error = "Something went wrong. Please try again";
+            Console.WriteLine($"Could not save chart. Ex: {ex}");
+        }
+    }
+
+    private void ClearMessages()
+    {
+        error = string.Empty;
+        message = string.Empty;
+    }
+
+}
+
+<style>
+    .weighted {
+        font-weight: 700;
+    }
+    .chart-page {
+        display:grid;
+        grid-template-columns: 1fr 3fr;
+    }
+    .patient-data {
+        margin:24px;
+        align-self: start;
+    }
+    .chart-data {
+        display:flex;
+        justify-content: center;
+        gap:30px;
+    }
+    .form-data {
+        margin:24px;
+    }
+    .form-data textarea {
+        margin-bottom: 12px;
+    }
+    .patient-data h1 {
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        border-bottom: solid var(--color-text-label) 5px;
+    }
+    textarea {
+        height:200px;
+    }
+</style>

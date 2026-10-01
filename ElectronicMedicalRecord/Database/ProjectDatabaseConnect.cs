@@ -21,6 +21,7 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUser> ApplicationUserDb { get; set; } // The identity table for users
     public DbSet<Message> MessageDb { get; set; }
     public DbSet<Chat> ChatDb { get; set; }
+    public DbSet<Chart> ChartDb { get; set; } // Database table for charting by practitioners
 
     // Database Model Builder
     protected override void OnModelCreating(ModelBuilder builder)
@@ -54,6 +55,18 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .HasOne(x => x.Employee)
             .WithOne()
             .HasForeignKey<Message>(x => x.EmployeeId);
+        // Charts
+        builder.Entity<Chart>()
+            .HasOne(x => x.Practitioner)
+            .WithMany()
+            .HasForeignKey(x => x.PractitionerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Chart>()
+            .HasOne(x => x.Patient)
+            .WithMany()
+            .HasForeignKey(x => x.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
 }

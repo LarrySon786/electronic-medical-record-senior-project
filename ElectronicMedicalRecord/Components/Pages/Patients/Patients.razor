@@ -1,8 +1,13 @@
 @page "/patients"
 @rendermode InteractiveServer
 @attribute [Authorize]
+@using ElectronicMedicalRecord.Components.Ui
 @using ElectronicMedicalRecord.Models
+@using ElectronicMedicalRecord.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
 @inject ElectronicMedicalRecord.Services.PatientService patientService
+@inject ChartService chartService
 
 <PageTitle>Patients</PageTitle>
 
@@ -78,6 +83,18 @@
                                     <button class="btn btn-sm btn-secondary" type="button" @onclick="() => OpenPatientDialog(patient)">
                                         View patient
                                     </button>
+                                    <button class="btn btn-sm btn-secondary" type="button"
+                                            @onclick="() => OpenChartDialog(patient.Id)">
+                                        View Charts        
+                                    </button>
+                                    <AuthorizeView Roles="Practitioner">
+                                        <Authorized>
+                                            <button class="btn btn-sm btn-primary" type="button"
+                                                    @onclick="() => CreateChart(patient.Id)">
+                                                Create Chart
+                                            </button>
+                                        </Authorized>
+                                    </AuthorizeView>
                                 </td>
                             </tr>
                         }
@@ -91,15 +108,20 @@
 @if (IsDialogOpen)
 {
     <PatientDialog Patient="ActivePatient"
-                   MedicalRecord="ActiveMedicalRecord"
                    IsCreating="IsCreating"
                    OnClose="CloseDialog"
                    OnSave="SavePatient"
                    OnDisable="DisablePatient"
                    OnEnable="EnablePatient" />
 }
+else if (ViewChartsDialog)
+{
+    <ChartingHistoryDialog Charts="selectedCharts" OnClose="CloseChartDialog"/>
+}
 
 @code {
+    private List<Chart> selectedCharts { get; set; } = new();
+    private bool ViewChartsDialog { get; set; } = false;
     private string SearchTerm { get; set; } = "";
     private bool IsDialogOpen { get; set; }
     private bool IsCreating { get; set; }
@@ -208,6 +230,45 @@
         Patient = patient,
         Medications = new List<Medication>()
     };
+
+
+    @* This function creates a new chart note and redirects to a new charting page *@
+    private async Task CreateChart(int patientId)
+    {
+        try
+        {
+            Employee? user = await authState.GetCurrentUserAsync();
+            if (user == null) return;
+            Chart? newChart = await chartService.CreateNewChart(patientId, user.Id);
+            navigationManager.NavigateTo($"/patient/chart/{newChart.Id}");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Could not create a new chart. Ex: {ex}");
+        }
+    }
+
+    @* This function allows employees to view existing charts for patients. *@
+
+    private async Task OpenChartDialog(int patientId)
+    {
+        try
+        {
+            selectedCharts = await chartService.GetAllChartsByPatientId(patientId);
+            ViewChartsDialog = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not fetch patient's charts. Ex: {ex}");
+        }
+
+    }
+
+    private void CloseChartDialog()
+    {
+        ViewChartsDialog = false;
+        selectedCharts = new();
+    }
 
     @* This function created a new datbase query to refresh the page with fresh content *@
     private async Task RefreshPatients()

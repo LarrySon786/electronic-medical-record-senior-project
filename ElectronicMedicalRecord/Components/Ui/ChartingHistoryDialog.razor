@@ -1,0 +1,60 @@
+@using ElectronicMedicalRecord.Models
+
+
+<div class="overlay">
+    <div class="overlay-container">
+        <div class="standard-card">
+            <div class="top-bar">
+                <p @onclick="Close">X</p>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Practitioner</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Chart chart in Charts)
+                    {
+                        <tr>
+                            <td>@(chart.Practitioner!.FirstName) @chart.Practitioner.LastName</td>
+                            <td>@chart.DateCreated</td>
+                            <td>
+                                <a class="btn btn-primary" href="/patient/chart/@chart.Id">
+                                    View Chart
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@code {
+    [Parameter] required public List<Chart> Charts { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}
+
+<style>
+    .top-bar{
+        display:flex;
+        justify-content: end;
+    }
+</style>

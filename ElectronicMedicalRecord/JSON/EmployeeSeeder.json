@@ -1,7 +1,7 @@
 [
   {
-    "firstName": "Test",
-    "middleName": "Admin",
+    "firstName": "Admin",
+    "middleName": "Test",
     "lastName": "User",
     "password": "Adminiscool1!",
     "dateOfBirth": "1990-01-15",
@@ -10,8 +10,8 @@
     "role": "Admin"
   },
   {
-    "firstName": "Test",
-    "middleName": "Practitioner",
+    "firstName": "Practitioner",
+    "middleName": "Test",
     "lastName": "User",
     "password": "Practitioneriscool1!",
     "dateOfBirth": "1985-06-20",
@@ -20,8 +20,8 @@
     "role": "Practitioner"
   },
   {
-    "firstName": "Test",
-    "middleName": "Employee",
+    "firstName": "Employee",
+    "middleName": "Test",
     "lastName": "User",
     "password": "Employeeiscool1!",
     "dateOfBirth": "1995-09-10",

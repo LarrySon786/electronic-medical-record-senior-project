@@ -3,6 +3,7 @@ using System;
 using ElectronicMedicalRecord.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ElectronicMedicalRecord.Migrations
 {
     [DbContext(typeof(ProjectDatabaseConnection))]
-    partial class ProjectDatabaseConnectionModelSnapshot : ModelSnapshot
+    [Migration("20260930143449_FixDatabase")]
+    partial class FixDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,48 +90,6 @@ namespace ElectronicMedicalRecord.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ElectronicMedicalRecord.Models.Chart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Assesment")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly>("DateCreated")
-                        .HasColumnType("date");
-
-                    b.Property<string>("ObjectiveNotes")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Plan")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("PractitionerId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("SubjectiveNotes")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
-
-                    b.HasIndex("PractitionerId");
-
-                    b.ToTable("ChartDb");
                 });
 
             modelBuilder.Entity("ElectronicMedicalRecord.Models.Medical", b =>
@@ -442,25 +403,6 @@ namespace ElectronicMedicalRecord.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("ElectronicMedicalRecord.Models.Chart", b =>
-                {
-                    b.HasOne("ElectronicMedicalRecord.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Employee", "Practitioner")
-                        .WithMany()
-                        .HasForeignKey("PractitionerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
-
-                    b.Navigation("Practitioner");
                 });
 
             modelBuilder.Entity("ElectronicMedicalRecord.Models.Medical", b =>
