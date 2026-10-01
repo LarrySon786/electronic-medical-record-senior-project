@@ -202,7 +202,7 @@
         {
             Patient.MedicalOverview!.Medications.Remove(medication);
             await patientService.UpdatePatient(Patient);
-        }
+        } 
         catch (Exception ex)
         {
             Console.WriteLine($"Could not remove medication. Ex: {ex}");

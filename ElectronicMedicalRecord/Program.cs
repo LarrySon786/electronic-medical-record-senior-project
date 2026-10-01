@@ -43,6 +43,7 @@ builder.Services.AddScoped<AuthService>(); // Authenticaion and Authorization ac
 builder.Services.AddControllers(); // This establishes controllers for the app
 builder.Services.AddScoped<PatientService>(); // Allows operations with patient data / objects. Included CRUD operations
 builder.Services.AddScoped<EmployeeService>(); // Allows operations with employee data.
+builder.Services.AddScoped<ChartService>(); // Allows charting operations by practitioners and employees
 
 // SCOPED Seed Services
 builder.Services.AddScoped<TestConnectionService>(); // A temporary service to test Database connections.
