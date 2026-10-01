@@ -41,6 +41,18 @@ public class EmployeeService
         }, context);
     }
 
+
+    //GET Employee By Authenticateuse Id
+    public async Task<Employee?> GetEmployeeByUserIdAsync(string userId, ProjectDatabaseConnection? context = null)
+    {
+        return await _context.ExecuteAsync(async db =>
+        {
+            return await EmployeeQuery(db)
+                .Where(e => e.ApplicationUserId == userId)
+                .FirstOrDefaultAsync();
+        }, context);
+    }
+
     //GET Employee by Email
     public async Task<Employee?> GetEmployeeByEmailAsync(string email, ProjectDatabaseConnection? context = null)
     {
