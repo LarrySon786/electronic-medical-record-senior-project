@@ -25,7 +25,7 @@ else
             
             @* Display patient medical overview *@
             <div>
-                <p><span class="weighted">Blood Type:</span> @chart.Patient.MedicalOverview.BloodType</p>
+                <p><span class="weighted">Blood Type:</span> @chart.Patient.MedicalOverview!.BloodType</p>
                 <p><span class="weighted">Height:</span> @chart.Patient.MedicalOverview.Height</p>
                 <p><span class="weighted">Weight::</span> @chart.Patient.MedicalOverview.Weight</p>
                 <p><span class="weighted">Allergies:</span> @chart.Patient.MedicalOverview.Allergies</p>
@@ -40,7 +40,7 @@ else
 
                 @* Chart Info *@
                 <div class="chart-data">
-                    <p class="text-muted">Practitioner: @chart.Practitioner.FirstName @chart.Practitioner.LastName</p>
+                    <p class="text-muted">Practitioner: @chart.Practitioner!.FirstName @chart.Practitioner.LastName</p>
                     <p class="text-muted">Chart Created: @chart.DateCreated</p>
                     <p class="text-muted">Chart Id: @chart.Id</p>
                 </div>

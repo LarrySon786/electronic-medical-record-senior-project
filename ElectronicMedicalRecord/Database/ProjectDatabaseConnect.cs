@@ -67,6 +67,23 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(x => x.PatientId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Chats and Messages
+        builder.Entity<Chat>() // Ties messages to chat
+            .HasMany(x => x.Messages)
+            .WithOne(x => x.Chat)
+            .HasForeignKey(x => x.ChatId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Chat>() // Ties participants to chat
+            .HasMany(x => x.Participants)
+            .WithMany();
+
+        builder.Entity<Message>() // Ties messages to employees
+            .HasOne(x => x.Employee)
+            .WithMany()
+            .HasForeignKey(x => x.EmployeeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
 }
