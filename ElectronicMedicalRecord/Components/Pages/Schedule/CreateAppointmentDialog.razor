@@ -6,7 +6,7 @@
 
 <div class="overlay">
     <div class="overlay-container">
-        <div class="standard-card">
+        <div class="standard-card dialog-box">
             <EditForm Model="Appointment" OnValidSubmit="HandleSubmit" FormName="Appointment Form">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
@@ -89,9 +89,12 @@
 
                 @* Buttons *@
                 <div class="mt-4">
-                    <button class="btn btn-danger" type="button" @onclick="DeleteAppointment">
-                        Delete Appointment
-                    </button>
+                    @if (ExistingAppointment != null)
+                    {
+                        <button class="btn btn-danger" type="button" @onclick="DeleteAppointment">
+                            Delete Appointment
+                        </button>
+                    }
                     <button class="btn btn-secondary" type="button" @onclick="HandleClose">
                         Cancel
                     </button>
@@ -220,11 +223,6 @@
                 Error = "Please select a practitioner.";
                 return;
             }
-            @* if (patient == null)
-            {
-                Error = "Please select a patient.";
-                return;
-            } *@
 
             Appointment.Practitioner = practitioner;
             Appointment.Patient = patient;
@@ -261,11 +259,9 @@
     private async Task DeleteAppointment()
     {
         ClearMessage();
-
         try
         {
-            @* await scheduleService.ToggleAppointmentArchived(Appointment.Id); *@
-
+            await scheduleService.ToggleAppointmentArchived(ExistingAppointment.Id);
             await HandleClose();
         }
         catch (Exception ex)
@@ -294,3 +290,10 @@
         Query = e.Value?.ToString() ?? string.Empty;
     }
 }
+
+
+<style>
+    .dialog-box {
+        min-width: 30vw;
+    }
+</style>

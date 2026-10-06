@@ -173,7 +173,8 @@ else if (EditAppointmentDialog && SelectedAppointment != null)
     {
         try
         {
-            ExistingAppointments = await scheduleService.GetAllAppointmentsWithinDates(CalendarStartDate, DaysDisplayed);
+            var appointments = await scheduleService.GetAllAppointmentsWithinDates(CalendarStartDate, DaysDisplayed);
+            ExistingAppointments = appointments.Where(x => x.Archived == false).ToList();
         }
         catch(Exception ex)
         {
