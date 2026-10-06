@@ -22,11 +22,25 @@
 </head>
 
 <body>
-    <CascadingAuthenticationState>
-        <Routes @rendermode="InteractiveServer"/>
-    </CascadingAuthenticationState>
+    
+    <Routes @rendermode="InteractiveServer" InitialState="initialApplicationState" />
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 
 </html>
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private InitialApplicationState? initialApplicationState;
+
+    protected override void OnInitialized()
+    {
+        initialApplicationState = new()
+        {
+            Cookie = HttpContext?.Request.Cookies["EMR.Identity"]
+        };
+    }
+}

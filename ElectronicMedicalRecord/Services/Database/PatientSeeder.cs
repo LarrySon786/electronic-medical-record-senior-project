@@ -20,6 +20,10 @@ public class PatientSeeder
     // Responsible for seeding patient data
     public async Task SeedPatientsAsync(ProjectDatabaseConnection context)
     {
+        // Avoid duplicates: do nothing if chats already exist in the database
+        if (await context.PatientDb.AnyAsync())
+            return;
+
         // Fetch Json file data
         var file = File.ReadAllText("JSON/PatientSeed.json");
         var patientDefinition = JsonSerializer.Deserialize<List<Patient>>(file, new JsonSerializerOptions

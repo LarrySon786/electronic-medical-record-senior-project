@@ -1,0 +1,164 @@
+[
+  {
+    "participantIds": [1, 2],
+    "createAt": "2026-10-01T08:30:00Z",
+    "messages": [
+      {
+        "content": "Good morning. Could you please review the patient's latest blood test results?",
+        "sendAt": "2026-10-01T08:31:00Z",
+        "employeeId": 1,
+        "chatId": 1
+      },
+      {
+        "content": "Good morning. Yes, I will review them now.",
+        "sendAt": "2026-10-01T08:33:00Z",
+        "employeeId": 2,
+        "chatId": 1
+      },
+      {
+        "content": "Thank you. Please let me know if you notice anything unusual.",
+        "sendAt": "2026-10-01T08:35:00Z",
+        "employeeId": 1,
+        "chatId": 1
+      }
+    ]
+  },
+  {
+    "participantIds": [1, 3],
+    "createAt": "2026-10-02T10:15:00Z",
+    "messages": [
+      {
+        "content": "The patient in Room 204 needs a follow-up appointment.",
+        "sendAt": "2026-10-02T10:16:00Z",
+        "employeeId": 3,
+        "chatId": 2
+      },
+      {
+        "content": "I will check the doctor's schedule and arrange the appointment.",
+        "sendAt": "2026-10-02T10:18:00Z",
+        "employeeId": 1,
+        "chatId": 2
+      },
+      {
+        "content": "Great. Please make sure the patient is informed about the appointment time.",
+        "sendAt": "2026-10-02T10:20:00Z",
+        "employeeId": 3,
+        "chatId": 2
+      }
+    ]
+  },
+  {
+    "participantIds": [2, 3],
+    "createAt": "2026-10-03T14:00:00Z",
+    "messages": [
+      {
+        "content": "Have you received the laboratory results for the patient in Room 108?",
+        "sendAt": "2026-10-03T14:01:00Z",
+        "employeeId": 2,
+        "chatId": 3
+      },
+      {
+        "content": "Yes, I just received them from the laboratory.",
+        "sendAt": "2026-10-03T14:03:00Z",
+        "employeeId": 3,
+        "chatId": 3
+      },
+      {
+        "content": "Could you please add the results to the patient's medical record?",
+        "sendAt": "2026-10-03T14:05:00Z",
+        "employeeId": 2,
+        "chatId": 3
+      },
+      {
+        "content": "Sure, I will update the medical record shortly.",
+        "sendAt": "2026-10-03T14:07:00Z",
+        "employeeId": 3,
+        "chatId": 3
+      }
+    ]
+  },
+  {
+    "participantIds": [1, 2, 3],
+    "createAt": "2026-10-04T07:45:00Z",
+    "messages": [
+      {
+        "content": "Good morning everyone. We have several new admissions this morning.",
+        "sendAt": "2026-10-04T07:46:00Z",
+        "employeeId": 1,
+        "chatId": 4
+      },
+      {
+        "content": "How many patients have been admitted so far?",
+        "sendAt": "2026-10-04T07:48:00Z",
+        "employeeId": 2,
+        "chatId": 4
+      },
+      {
+        "content": "There are four new admissions. Two of them require additional laboratory tests.",
+        "sendAt": "2026-10-04T07:50:00Z",
+        "employeeId": 1,
+        "chatId": 4
+      },
+      {
+        "content": "I will coordinate with the laboratory and make sure the tests are scheduled.",
+        "sendAt": "2026-10-04T07:52:00Z",
+        "employeeId": 3,
+        "chatId": 4
+      }
+    ]
+  },
+  {
+    "participantIds": [1, 3],
+    "createAt": "2026-10-04T11:20:00Z",
+    "messages": [
+      {
+        "content": "The patient in Room 312 is reporting increased pain.",
+        "sendAt": "2026-10-04T11:21:00Z",
+        "employeeId": 3,
+        "chatId": 5
+      },
+      {
+        "content": "Has the patient's vital signs been checked?",
+        "sendAt": "2026-10-04T11:22:00Z",
+        "employeeId": 1,
+        "chatId": 5
+      },
+      {
+        "content": "Yes. Blood pressure and temperature are within the expected range.",
+        "sendAt": "2026-10-04T11:24:00Z",
+        "employeeId": 3,
+        "chatId": 5
+      },
+      {
+        "content": "Okay. I will come to the ward and assess the patient.",
+        "sendAt": "2026-10-04T11:26:00Z",
+        "employeeId": 1,
+        "chatId": 5
+      }
+    ]
+  },
+  {
+    "participantIds": [2, 3],
+    "createAt": "2026-10-04T13:10:00Z",
+    "messages": [
+      {
+        "content": "The discharge documents for Room 215 are ready.",
+        "sendAt": "2026-10-04T13:11:00Z",
+        "employeeId": 2,
+        "chatId": 6
+      },
+      {
+        "content": "Has the attending physician signed the discharge summary?",
+        "sendAt": "2026-10-04T13:12:00Z",
+        "employeeId": 3,
+        "chatId": 6
+      },
+      {
+        "content": "Yes, the summary was signed this morning.",
+        "sendAt": "2026-10-04T13:14:00Z",
+        "employeeId": 2,
+        "chatId": 6
+      }
+    ]
+  }
+]

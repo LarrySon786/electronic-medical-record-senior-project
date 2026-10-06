@@ -54,8 +54,9 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
 
         builder.Entity<Message>()
             .HasOne(x => x.Employee)
-            .WithOne()
-            .HasForeignKey<Message>(x => x.EmployeeId);
+            .WithMany()
+            .HasForeignKey(x => x.EmployeeId);
+
         // Charts
         builder.Entity<Chart>()
             .HasOne(x => x.Practitioner)
