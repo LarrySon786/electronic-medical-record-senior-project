@@ -1,0 +1,299 @@
+@using ElectronicMedicalRecord.Models
+@using ElectronicMedicalRecord.Models.Dtos
+@using ElectronicMedicalRecord.Services
+@inject PatientService patientService
+@inject ScheduleService scheduleService
+
+<div class="overlay">
+    <div class="overlay-container">
+        <div class="standard-card dialog-box">
+            <EditForm Model="Appointment" OnValidSubmit="HandleSubmit" FormName="Appointment Form">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                @* Practitioner *@
+                <div class="form-group">
+                    <label class="form-label">Practitioner</label>
+                    <InputSelect class="form-select" @bind-Value="PractitionerId">
+                        @foreach (Employee option in PractitionerOptions)
+                        {
+                            <option value="@option.Id"> @option.FirstName @option.LastName</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                @* Patient *@
+                <div class="form-group">
+                    <label class="form-label">Patient</label>
+                    <input class="form-control" value="@Query" @oninput="UpdateQuery" />
+
+                    @if (!string.IsNullOrWhiteSpace(Query))
+                    {
+                        <InputSelect class="form-select" @bind-Value="PatientId">
+                            <option value="0" disabled>--Select Patient--</option>
+                            @foreach (Patient option in QueriedPatients)
+                            {
+                                <option value="@option.Id">
+                                    @option.FirstName @option.MiddleName @option.LastName
+                                    | @option.DateOfBirth
+                                    | @option.PhoneNumber
+                                </option>
+                            }
+                        </InputSelect>
+                    }
+                </div>
+
+                @* Title *@
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <InputText class="form-control" @bind-Value="Appointment.Title" />
+                </div>
+
+                @* Date *@
+                <div class="form-group">
+                    <label class="form-label">*Appointment Date</label>
+                    <InputDate class="form-control" @bind-Value="AppointmentDate" />
+                </div>
+
+                @* Time *@
+                <div class="form-group">
+                    <label class="form-label">*Appointment Time</label>
+                    <InputSelect class="form-select" @bind-Value="AppointmentTime">
+                        @for (TimeOnly time = CalendarStartTime; time < CalendarEndTime; time = time.AddMinutes(15))
+                        {
+                            <option value="@time">@time</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                @* Appointment Length *@
+                <div class="form-group">
+                    <label class="form-label">*Appointment Length</label>
+                    <InputSelect class="form-select" @bind-Value="Appointment.TimeLength">
+                        <option value="@TimeSpan.FromMinutes(15)"> 15 Minutes </option>
+                        <option value="@TimeSpan.FromMinutes(30)"> 30 Minutes </option>
+                        <option value="@TimeSpan.FromMinutes(45)"> 45 Minutes </option>
+                        <option value="@TimeSpan.FromMinutes(60)"> 60 Minutes </option>
+                    </InputSelect>
+                </div>
+
+                @* Messages *@
+                @if (!string.IsNullOrWhiteSpace(Error))
+                {
+                    <p class="alert">@Error</p>
+                }
+                else if (!string.IsNullOrWhiteSpace(Message))
+                {
+                    <p class="Success">@Message</p>
+                }
+
+                @* Buttons *@
+                <div class="mt-4">
+                    @if (ExistingAppointment != null)
+                    {
+                        <button class="btn btn-danger" type="button" @onclick="DeleteAppointment">
+                            Delete Appointment
+                        </button>
+                    }
+                    <button class="btn btn-secondary" type="button" @onclick="HandleClose">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" type="submit">
+                        Save Appointment
+                    </button>
+                </div>
+                
+            </EditForm>
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+    // Practitioner
+    [Parameter] required public Employee SelectedPractitioner { get; set; }
+    [Parameter] public List<Employee> PractitionerOptions { get; set; } = new();
+
+    // Patients
+    public List<Patient> Patients { get; set; } = new();
+
+    private IEnumerable<Patient> QueriedPatients =>
+        Patients.Where(x =>
+            (x.FirstName?.Contains(Query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+            (x.MiddleName?.Contains(Query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+            (x.LastName?.Contains(Query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+            (x.PhoneNumber?.Contains(Query, StringComparison.OrdinalIgnoreCase) ?? false)
+        );
+
+    // Schedule configuration
+    [Parameter] required public TimeOnly CalendarStartTime { get; set; }
+    [Parameter] required public TimeOnly CalendarEndTime { get; set; }
+
+    // Dialog
+    [Parameter] required public EventCallback OnClose { get; set; }
+
+    // Appointment
+    [Parameter] public TimeOnly AppointmentTime { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
+
+    [Parameter] public DateOnly AppointmentDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+    [Parameter] public Appointment? ExistingAppointment { get; set; }
+
+    private int PractitionerId { get; set; }
+    private int PatientId { get; set; }
+
+    public AppointmentDto Appointment { get; set; } = new();
+
+    // Patient search
+    public string Query { get; set; } = string.Empty;
+
+    // Messages
+    private string Error { get; set; } = string.Empty;
+    private string Message { get; set; } = string.Empty;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            PractitionerId = SelectedPractitioner.Id;
+
+            Patients = await patientService.GetAllPatients();
+
+            if (PractitionerOptions.Count == 0)
+            {
+                PractitionerOptions = [SelectedPractitioner];
+            }
+
+            if (ExistingAppointment != null)
+            {
+                LoadExistingAppointment();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not initialize page. Ex: {ex}");
+        }
+    }
+
+
+    private void LoadExistingAppointment()
+    {
+        Appointment.Title = ExistingAppointment!.Title;
+        Appointment.Date = ExistingAppointment.Date;
+        Appointment.StartTime = ExistingAppointment.StartTime;
+        Appointment.TimeLength = ExistingAppointment.TimeLength;
+        AppointmentDate = ExistingAppointment.Date;
+        AppointmentTime = ExistingAppointment.StartTime;
+        PractitionerId = ExistingAppointment.PractitionerId;
+
+        if (ExistingAppointment.PatientId.HasValue)
+        {
+            PatientId = ExistingAppointment.PatientId.Value;
+            if (ExistingAppointment.Patient != null)
+            {
+                Query = $"{ExistingAppointment.Patient.FirstName} " + $"{ExistingAppointment.Patient.LastName}";
+            }
+        }
+
+        if (ExistingAppointment.Practitioner != null)
+        {
+            SelectedPractitioner = ExistingAppointment.Practitioner;
+        }
+    }
+
+
+    private async Task HandleSubmit()
+    {
+        ClearMessage();
+        try
+        {
+            Appointment.StartTime = AppointmentTime;
+            Appointment.Date = AppointmentDate;
+
+            var practitioner = PractitionerOptions
+                .FirstOrDefault(x => x.Id == PractitionerId);
+
+            var patient = Patients
+                .FirstOrDefault(x => x.Id == PatientId);
+
+            if (practitioner == null)
+            {
+                Error = "Please select a practitioner.";
+                return;
+            }
+
+            Appointment.Practitioner = practitioner;
+            Appointment.Patient = patient;
+
+            if (ExistingAppointment != null)
+            {
+                ExistingAppointment.Title = Appointment.Title;
+                ExistingAppointment.Date = Appointment.Date;
+                ExistingAppointment.StartTime = Appointment.StartTime;
+                ExistingAppointment.TimeLength = Appointment.TimeLength;
+                ExistingAppointment.Practitioner = Appointment.Practitioner;
+                ExistingAppointment.PractitionerId = PractitionerId;
+                ExistingAppointment.Patient = Appointment.Patient;
+                ExistingAppointment.PatientId = PatientId;
+
+                await scheduleService.UpdateAppointment(ExistingAppointment);
+            }
+            else
+            {
+                await scheduleService.CreateAppointment(Appointment);
+            }
+
+            Message = "Success!";
+            await HandleClose();
+        }
+        catch (Exception ex)
+        {
+            Error = $"Something went wrong. {ex.Message}";
+            Console.WriteLine($"Could not save appointment. Ex: {ex}");
+        }
+    }
+
+
+    private async Task DeleteAppointment()
+    {
+        ClearMessage();
+        try
+        {
+            await scheduleService.ToggleAppointmentArchived(ExistingAppointment.Id);
+            await HandleClose();
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+            Console.WriteLine($"Could not delete appointment. Ex: {ex}");
+        }
+    }
+
+
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+
+    private void ClearMessage()
+    {
+        Error = string.Empty;
+        Message = string.Empty;
+    }
+
+
+    private void UpdateQuery(ChangeEventArgs e)
+    {
+        Query = e.Value?.ToString() ?? string.Empty;
+    }
+}
+
+
+<style>
+    .dialog-box {
+        min-width: 30vw;
+    }
+</style>

@@ -28,5 +28,65 @@
     "phoneNumber": "330-555-1003",
     "email": "test.employee@gmail.com",
     "role": "Employee"
+  },
+  {
+    "firstName": "Sarah",
+    "middleName": "Elizabeth",
+    "lastName": "Mitchell",
+    "password": "SarahMitchell1!",
+    "dateOfBirth": "1982-03-18",
+    "phoneNumber": "330-555-1004",
+    "email": "sarah.mitchell@gmail.com",
+    "role": "Admin"
+  },
+  {
+    "firstName": "Michael",
+    "middleName": "Andrew",
+    "lastName": "Anderson",
+    "password": "MichaelAnderson1!",
+    "dateOfBirth": "1978-11-04",
+    "phoneNumber": "330-555-1005",
+    "email": "michael.anderson@gmail.com",
+    "role": "Admin"
+  },
+  {
+    "firstName": "Emily",
+    "middleName": "Grace",
+    "lastName": "Carter",
+    "password": "EmilyCarter1!",
+    "dateOfBirth": "1987-07-22",
+    "phoneNumber": "330-555-1006",
+    "email": "emily.carter@gmail.com",
+    "role": "Practitioner"
+  },
+  {
+    "firstName": "David",
+    "middleName": "James",
+    "lastName": "Williams",
+    "password": "DavidWilliams1!",
+    "dateOfBirth": "1975-02-09",
+    "phoneNumber": "330-555-1007",
+    "email": "david.williams@gmail.com",
+    "role": "Practitioner"
+  },
+  {
+    "firstName": "Jessica",
+    "middleName": "Marie",
+    "lastName": "Thompson",
+    "password": "JessicaThompson1!",
+    "dateOfBirth": "1993-10-14",
+    "phoneNumber": "330-555-1008",
+    "email": "jessica.thompson@gmail.com",
+    "role": "Employee"
+  },
+  {
+    "firstName": "Ryan",
+    "middleName": "Thomas",
+    "lastName": "Bennett",
+    "password": "RyanBennett1!",
+    "dateOfBirth": "1998-05-27",
+    "phoneNumber": "330-555-1009",
+    "email": "ryan.bennett@gmail.com",
+    "role": "Employee"
   }
 ]

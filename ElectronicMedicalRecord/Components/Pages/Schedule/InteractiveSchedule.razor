@@ -1,0 +1,252 @@
+@using ElectronicMedicalRecord.Migrations
+@using ElectronicMedicalRecord.Models
+@using ElectronicMedicalRecord.Services
+@inject ScheduleService scheduleService
+@* This page is a reusable calendar component that displays the schedule of the relevant practitioner *@
+
+
+
+<div class="schedule">
+    @* Calendar tools and navigation *@
+    <div class="tool-bar">
+        <button class="btn" disabled>@Practitioner.FirstName @Practitioner.LastName | Schedule</button>
+        <button class="btn btn-primary" type="button" @onclick="PrevWeek">Prev</button>
+        <button class="btn btn-primary" type="button" @onclick="NextWeek">Next</button>
+    </div>
+
+    @* The calendar *@
+    <div class="week">
+        
+        @for (DateOnly d = CalendarStartDate; d <= CalendarStartDate.AddDays(DaysDisplayed -1); d = d.AddDays(1))
+        {
+            if (d == CalendarStartDate)
+            {
+                <div class="left-hour-bar">
+                    <div class="block">Day</div>
+                    <div class="block">Time</div>
+                    @foreach(var block in Blocks.Where(x => DateOnly.FromDateTime(x.Time) == d))
+                    {
+                        <div class="left-block" @onclick="() => OpenScheduleAppointmentDialog(block)"> @TimeOnly.FromDateTime(block.Time) </div>
+                    }
+                </div>
+            }
+            <div class="day">
+                <div class="block schedule-header">@d.DayOfWeek</div>
+                <div class="block schedule-header">@d</div>
+                @foreach(var block in Blocks.Where(x => DateOnly.FromDateTime(x.Time) == d))
+                {
+                    @if (ExistingAppointments.Any(x => x.DateTime == block.Time) && GetAppointment(block) != null)
+                    {
+                        <section class="scheduled-block appointment scheduled schedule-start" @onclick="() => OpenEditAppointmentDialog(GetAppointment(block)!)">
+                            @GetAppointment(block)!.Title
+                        </section>
+                    }
+                    else if (GetAppointment(block) != null)
+                    {
+                            <section class="scheduled-block appointment scheduled"
+                                     @onclick="() => OpenEditAppointmentDialog(GetAppointment(block)!)">
+                            </section>
+                    }
+                    else
+                    {
+                        <section class="block appointment" @onclick="() => OpenScheduleAppointmentDialog(block)"></section>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@if (OpenAppointmentDialog && SelectedBlock != null)
+{
+    <CreateAppointmentDialog 
+        SelectedPractitioner="Practitioner" 
+        PractitionerOptions="PractitionerOptions" 
+        OnClose="CloseScheduleAppointmentDialog" 
+        CalendarStartTime="CalendarStartTime"
+        CalendarEndTime="CalendarEndTime"
+        AppointmentTime="TimeOnly.FromDateTime(SelectedBlock.Time)"
+        AppointmentDate="DateOnly.FromDateTime(SelectedBlock.Time)"
+    />
+}
+else if (EditAppointmentDialog && SelectedAppointment != null)
+{
+    <CreateAppointmentDialog
+        SelectedPractitioner="Practitioner"
+        PractitionerOptions="PractitionerOptions"
+        OnClose="CloseEditAppointmentDialog"
+        CalendarStartTime="CalendarStartTime"
+        CalendarEndTime="CalendarEndTime"
+        AppointmentTime="SelectedAppointment.StartTime"
+        AppointmentDate="SelectedAppointment.Date"
+        ExistingAppointment="SelectedAppointment"
+    />
+}
+
+@code {
+    [Parameter] required public List<Employee> PractitionerOptions { get; set; }
+    [Parameter] required public Employee Practitioner { get; set; }
+    [Parameter] public TimeOnly CalendarStartTime { get; set; } = new TimeOnly(hour: 8, minute: 0);
+    [Parameter] public TimeOnly CalendarEndTime { get; set; } = new TimeOnly(hour: 17, minute: 0);
+    [Parameter] public DateOnly CalendarStartDate { get; set; }
+    [Parameter] public int DaysDisplayed { get; set; } = 7;
+    public List<SchedulingBlock> Blocks { get; set; } = new();
+    private SchedulingBlock? SelectedBlock { get; set; }
+    private bool OpenAppointmentDialog { get; set; }
+
+    @* Existing appointment management *@
+    private List<Appointment> ExistingAppointments { get; set; } = new();
+    private int ScheduledOver { get; set; } = 0;
+
+    @* Edit existing appointment *@
+    private bool EditAppointmentDialog { get; set; } = false;
+    private Appointment? SelectedAppointment { get; set; }
+
+    @* METHODS *@
+    protected override async Task OnInitializedAsync()
+    {
+        PopulateDays();
+        await RefreshAppointments();
+    }
+
+    public void PopulateDays()
+    {
+        @* Load each day *@
+        for (DateOnly d = CalendarStartDate; d <= CalendarStartDate.AddDays(DaysDisplayed -1); d = d.AddDays(1))
+        {
+            @* Load each time *@
+            for (TimeOnly t = CalendarStartTime; t < CalendarEndTime; t = t.AddMinutes(15))
+            {
+                PopulateBlocks(d, t);
+            }
+        }
+    }
+    private void PopulateBlocks(DateOnly date, TimeOnly time)
+    {
+        DateTime newTime = new DateTime(date, time);
+        SchedulingBlock? block = new SchedulingBlock()
+        {
+            Time = newTime
+        };
+        Blocks.Add(block);
+    }
+
+    private void OpenScheduleAppointmentDialog(SchedulingBlock block)
+    {
+        SelectedBlock = Blocks.Where(x => x.Time == block.Time).First();
+        OpenAppointmentDialog = true;
+    }
+    private async Task CloseScheduleAppointmentDialog()
+    {
+        OpenAppointmentDialog = false;
+        SelectedBlock = null;
+        await RefreshAppointments();
+    }
+
+    private void OpenEditAppointmentDialog(Appointment appt)
+    {
+        SelectedAppointment = appt;
+        EditAppointmentDialog = true;
+    }
+    private async Task CloseEditAppointmentDialog()
+    {
+        EditAppointmentDialog = false;
+        SelectedAppointment = null;
+        await RefreshAppointments();
+    }
+
+    private async Task NextWeek()
+    {
+        Blocks = new();
+        CalendarStartDate = CalendarStartDate.AddDays(7);
+        PopulateDays();
+        await RefreshAppointments();
+    }
+    private async Task PrevWeek()
+    {
+        Blocks = new();
+        CalendarStartDate = CalendarStartDate.AddDays(-7);
+        PopulateDays();
+        await RefreshAppointments();
+    }
+    public async Task RefreshAppointments()
+    {
+        try
+        {
+            var appointments = await scheduleService.GetAllAppointmentsWithinDates(CalendarStartDate, DaysDisplayed);
+            ExistingAppointments = appointments.Where(x => x.Archived == false).ToList();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Could not refresh appointments. Ex: {ex}");
+        }
+    }
+
+    public Appointment? GetAppointment(SchedulingBlock block)
+    {
+        var appointment = ExistingAppointments
+            .FirstOrDefault(x => x.DateTime <= block.Time &&
+            block.Time < x.DateTime.Add(x.TimeLength) &&
+            x.PractitionerId == Practitioner.Id
+        );
+        return appointment;
+    }
+}
+
+
+<style>
+    
+    .schedule{
+        margin-left: 2rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+    .tool-bar {
+        width:fit-content;
+        margin-bottom: 1rem;
+    }
+    .week {
+        display:flex;
+        justify-content: center;
+        gap: 0;
+        width:100%;
+    .day {
+        flex: 1;
+        min-width: 0;
+    }
+    .left-block {
+        border: solid rgb(225, 225, 225) 1px;
+        font-size: 11px;
+        height:20px;
+    }
+
+    .block {
+        border: solid rgb(225, 225, 225) 1px;
+        text-align: center;
+    }
+
+    .scheduled-block {
+        text-align: center;
+    }
+
+    .appointment {
+        font-size: 11px;
+        height: 20px;
+    }
+    .appointment:hover {
+        background-color: var(--alert-color);
+    }
+    .scheduled {
+        @* border-left: solid black 1px;
+        border-right: solid black 1px; *@
+        background-color: var(--primary-color);
+        border-bottom: solid var(--primary-color) 1px;
+        color:white;
+        padding-left: 3px;
+        padding-right: 3px;
+        padding-top:2px;
+    }
+    .schedule-start {
+        border-top: solid white 1px;
+    }
+</style>
