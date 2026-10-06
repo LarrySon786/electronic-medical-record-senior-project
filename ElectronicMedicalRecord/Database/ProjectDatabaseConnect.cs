@@ -22,6 +22,7 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
     public DbSet<Message> MessageDb { get; set; }
     public DbSet<Chat> ChatDb { get; set; }
     public DbSet<Chart> ChartDb { get; set; } // Database table for charting by practitioners
+    public DbSet<Appointment> AppointmentDb { get; set; }
 
     // Database Model Builder
     protected override void OnModelCreating(ModelBuilder builder)
@@ -84,6 +85,21 @@ public class ProjectDatabaseConnection : IdentityDbContext<ApplicationUser>
             .WithMany()
             .HasForeignKey(x => x.EmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
+
+
+        // Schedule and Appointments
+        builder.Entity<Appointment>() // Appointments --> Patient
+            .HasOne(x => x.Patient)
+            .WithMany()
+            .HasForeignKey(x => x.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Appointment>() // Appointments --> Practitioner
+            .HasOne(x => x.Practitioner)
+            .WithMany()
+            .HasForeignKey(x => x.PractitionerId)
+            .OnDelete(DeleteBehavior.Restrict);
+            
     }
 
 }

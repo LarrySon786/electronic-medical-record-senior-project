@@ -48,6 +48,7 @@ builder.Services.AddScoped<MessageService>(); // Allows operations with chat.
 builder.Services.AddSignalR(); // SIGNALR: real-time communication used by the chat (ChatHub)
 builder.Services.AddHttpContextAccessor(); // Gives access to the current HTTP request (e.g. the user's cookie).
 builder.Services.AddScoped<ChartService>(); // Allows charting operations by practitioners and employees
+builder.Services.AddScoped<ScheduleService>(); // Allows scheduling and appointment operations
 
 // SCOPED Seed Services
 builder.Services.AddScoped<TestConnectionService>(); // A temporary service to test Database connections.

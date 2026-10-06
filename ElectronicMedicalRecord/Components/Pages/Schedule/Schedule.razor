@@ -1,0 +1,112 @@
+@page "/schedule"
+@using ElectronicMedicalRecord.Services
+@using ElectronicMedicalRecord.Models.Enums
+@using ElectronicMedicalRecord.Models.Dtos
+@rendermode InteractiveServer
+@attribute [Authorize]
+@inject EmployeeService employeeService
+
+<PageTitle>Schedule</PageTitle>
+
+<h1>Schedule</h1>
+
+@if (SelectedPractitioner == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="schedule-page">
+        @* Select Practitioner *@
+        <div class="standard-card practitioner-select">
+            <InputRadioGroup class="radio-group" @bind-Value="SelectedId" @bind-Value:after="PractitionerChanged">
+                @foreach (Employee practitioner in Practitioners)
+                {
+                    <div class="form-check">
+                        <InputRadio class="form-check-input" Value="practitioner.Id" />
+
+                        <label class="form-check-label">
+                            @practitioner.FirstName @practitioner.LastName
+                        </label>
+                    </div>
+                }
+            </InputRadioGroup>
+        </div>
+
+        @* Interactive Schedule *@       
+            <InteractiveSchedule @key="SelectedId" Practitioner="SelectedPractitioner"
+                PractitionerOptions="Practitioners" CalendarStartDate="CalendarStartDate" />
+        
+    </div>
+}
+
+@code
+{
+    private List<Employee> Practitioners { get; set; } = new();
+    private Employee? SelectedPractitioner { get; set; }
+    private int SelectedId { get; set; }
+    private CalendarType CalendarType { get; set; } = CalendarType.Week;
+    private DateOnly CalendarStartDate { get; set; }
+    private bool ScheduleActive { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var employees = await employeeService.GetAllEmployeesAsync();
+
+            Practitioners = employees
+                .Where(x => x.Role == EmployeeRole.Practitioner)
+                .ToList();
+
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            CalendarStartDate = today;
+
+            while (CalendarStartDate.DayOfWeek != DayOfWeek.Monday)
+            {
+                CalendarStartDate = CalendarStartDate.AddDays(-1);
+            }
+
+            if (Practitioners.Count > 0)
+            {
+                SelectedId = Practitioners[0].Id;
+                SelectedPractitioner = Practitioners[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Could not get practitioners. Ex: {ex}");
+        }
+    }
+
+
+    private async Task PractitionerChanged()
+    {
+        ScheduleActive = false;
+        SelectedPractitioner = Practitioners
+            .FirstOrDefault(x => x.Id == SelectedId);
+        ScheduleActive = true;
+        StateHasChanged();
+    }
+
+
+    private void ChangeCalendarType(CalendarType newType)
+    {
+        CalendarType = newType;
+    }
+}
+
+
+
+<style>    
+    .schedule-page {
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+    }
+
+    .practitioner-select {
+        align-self: start;
+        min-height: 30vh;
+    }
+</style>
