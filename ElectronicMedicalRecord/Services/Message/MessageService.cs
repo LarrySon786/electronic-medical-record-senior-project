@@ -14,6 +14,16 @@ public class MessageService
         _context = context;
     }
 
+    //Get All chats
+    public async Task<List<Chat>> GetAllChatsAsync(ProjectDatabaseConnection? context = null)
+    {
+        return await _context.ExecuteAsync(async db =>
+       {
+           return await ChatQuery(db).ToListAsync();
+       }, context);
+    }
+
+
     // Get All messages by Chat Id
     public async Task<List<Message>> GetMessageByChatIdAsync(int chatId, ProjectDatabaseConnection? context = null)
     {

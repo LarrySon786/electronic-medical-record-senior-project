@@ -57,8 +57,20 @@ builder.Services.AddScoped<ResetDatabase>(); // Allows reseting database for dev
 builder.Services.AddScoped<PatientSeeder>(); // Seeds patient data
 builder.Services.AddScoped<RoleSeeder>(); // Seeds role data
 builder.Services.AddScoped<EmployeeSeeder>(); // Seeds employee data
+builder.Services.AddScoped<ChatSeeder>(); // Seeds chat data
+builder.Services.AddScoped<CookieProvider>(); //Service to get cookie value
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+    var context = scope.ServiceProvider
+        .GetRequiredService<IDbContextFactory<ProjectDatabaseConnection>>()
+        .CreateDbContext();
+
+    await seedData.SeedAsync(context);
+}
 
 
 // Configure the HTTP request pipeline.

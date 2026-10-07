@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ElectronicMedicalRecord.Database;
 using ElectronicMedicalRecord.Models.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicMedicalRecord.Services.Database;
 
@@ -18,6 +19,10 @@ public class EmployeeSeeder
     // Responsible for seeding employee data
     public async Task SeedEmployeesAsync(ProjectDatabaseConnection context)
     {
+        // Avoid duplicates: do nothing if chats already exist in the database
+        if (await context.EmployeeDb.AnyAsync())
+            return;
+
         // Fetch Json file data
         var file = File.ReadAllText("JSON/EmployeeSeeder.json");
         var employeeDefinition = JsonSerializer.Deserialize<List<CreateEmployeeDto>>(file, new JsonSerializerOptions

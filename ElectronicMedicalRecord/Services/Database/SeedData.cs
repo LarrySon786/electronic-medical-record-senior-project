@@ -12,14 +12,16 @@ public class SeedData
     private readonly PatientSeeder _patientSeeder;
     private readonly RoleSeeder _roleSeeder;
     private readonly EmployeeSeeder _employeeSeeder;
+    private readonly ChatSeeder _chatSeeder;
 
     public SeedData(IDbContextFactory<ProjectDatabaseConnection> context, PatientSeeder patientSeeder,
-        EmployeeSeeder employeeSeeder, RoleSeeder roleSeeder)
+        EmployeeSeeder employeeSeeder, RoleSeeder roleSeeder, ChatSeeder chatSeeder)
     {
         _context = context;
         _patientSeeder = patientSeeder;
         _roleSeeder = roleSeeder;
         _employeeSeeder = employeeSeeder;
+        _chatSeeder = chatSeeder;
     }
 
     // Responsible for seeding data in the application.
@@ -33,7 +35,10 @@ public class SeedData
 
         // Seed Employees (users)
         await _employeeSeeder.SeedEmployeesAsync(context);
-    
+
+        // Seed ChatSeeder
+        await _chatSeeder.SeedChatsAsync(context);
+
     }
 }
 

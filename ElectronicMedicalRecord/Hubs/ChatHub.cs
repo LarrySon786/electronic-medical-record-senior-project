@@ -57,6 +57,7 @@ public class ChatHub : Hub
             .SendAsync(
                 "ReceiveMessage",
                 message.Id,
+                message.ChatId,
                 employee.Id,
                 message.Content,
                 message.SendAt);
@@ -66,5 +67,26 @@ public class ChatHub : Hub
             throw new HubException(
                 "You don't have access to this chat.");
         }
+    }
+
+    //Use to create chat
+    public async Task<int> CreateChat(string message)
+    {
+        //Verify authenticate user
+        var userId = Context.UserIdentifier;
+
+        if (userId == null) throw new HubException("User not authenticated.");
+
+        //Fetch current employee
+        Employee employee = await _employeeService.GetEmployeeByUserIdAsync(userId)
+            ?? throw new HubException("Could not send message. Employee not found.");
+
+        //Create chat
+        Chat chat = await _messageService.CreateNewChatAsync(employee.Id, message);
+
+        // Tell every connected employee to refresh their chat list
+        await Clients.All.SendAsync("ChatCreated");
+
+        return chat.Id;
     }
 }

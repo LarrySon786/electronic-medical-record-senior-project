@@ -1,9 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject CookieProvider cookieProvider
 
 
 <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" >
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
             <NotAuthorized>
                 <p>You must be logged in to access this page.</p>
             </NotAuthorized>
@@ -11,3 +12,13 @@
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+
+@code {
+    [Parameter]
+    public InitialApplicationState? InitialState { get; set; }
+
+    protected override void OnInitialized()
+    {
+        cookieProvider.Value = InitialState?.Cookie;
+    }
+}
