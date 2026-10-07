@@ -9,7 +9,7 @@ public class Patient
 
     // Reference to Medical Overview
     public int MedicalOverviewId { get; set; }
-    public Medical? MedicalOverview { get; set; }
+    public Medical MedicalOverview { get; set; } = new();
 
 
     // Properties

@@ -116,7 +116,8 @@
                                     <ul class="list-group list-group-flush">
                                         @foreach (var medication in Patient.MedicalOverview.Medications)
                                         {
-                                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                                    <li
+                                                        class="list-group-item d-flex justify-content-between align-items-center">
                                                 <span>@medication.name</span><button class="btn btn-sm btn-outline-danger" type="button"
                                                                                         @onclick="() => RemoveMedication(medication)">Remove</button></li>
                                         }

@@ -8,7 +8,7 @@
 
 <PageTitle>Schedule</PageTitle>
 
-<h1>Schedule</h1>
+
 
 @if (SelectedPractitioner == null)
 {
@@ -19,6 +19,7 @@ else
     <div class="schedule-page">
         @* Select Practitioner *@
         <div class="standard-card practitioner-select">
+            <h1>Schedule</h1>
             <InputRadioGroup class="radio-group" @bind-Value="SelectedId" @bind-Value:after="PractitionerChanged">
                 @foreach (Employee practitioner in Practitioners)
                 {
