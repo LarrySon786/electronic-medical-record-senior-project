@@ -64,15 +64,19 @@ var app = builder.Build();
 
 
 // This feature automatically resets the database each time the app starts:
-// using (var scope = app.Services.CreateScope())
-// {
-//     var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
-//     var context = scope.ServiceProvider
-//         .GetRequiredService<IDbContextFactory<ProjectDatabaseConnection>>()
-//         .CreateDbContext();
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+        var context = scope.ServiceProvider
+            .GetRequiredService<IDbContextFactory<ProjectDatabaseConnection>>()
+            .CreateDbContext();
 
-//     await seedData.SeedAsync(context);
-// }
+        await seedData.SeedAsync(context);
+    }
+}
+
 
 
 // Configure the HTTP request pipeline.
