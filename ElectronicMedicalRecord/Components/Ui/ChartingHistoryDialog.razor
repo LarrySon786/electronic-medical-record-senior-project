@@ -3,9 +3,9 @@
 
 <div class="overlay">
     <div class="overlay-container">
-        <div class="standard-card">
+        <div class="standard-card chart-dialog">
             <div class="top-bar">
-                <p @onclick="Close">X</p>
+                <button class="btn" type="button" @onclick="Close">X</button>
             </div>
             <table class="table">
                 <thead>
@@ -53,6 +53,10 @@
 }
 
 <style>
+    .chart-dialog {
+        min-width: 30vw;
+        min-height:30vh;
+    }
     .top-bar{
         display:flex;
         justify-content: end;

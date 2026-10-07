@@ -62,15 +62,17 @@ builder.Services.AddScoped<CookieProvider>(); //Service to get cookie value
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
-    var context = scope.ServiceProvider
-        .GetRequiredService<IDbContextFactory<ProjectDatabaseConnection>>()
-        .CreateDbContext();
 
-    await seedData.SeedAsync(context);
-}
+// This feature automatically resets the database each time the app starts:
+// using (var scope = app.Services.CreateScope())
+// {
+//     var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+//     var context = scope.ServiceProvider
+//         .GetRequiredService<IDbContextFactory<ProjectDatabaseConnection>>()
+//         .CreateDbContext();
+
+//     await seedData.SeedAsync(context);
+// }
 
 
 // Configure the HTTP request pipeline.
