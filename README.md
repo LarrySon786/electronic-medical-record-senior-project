@@ -1,5 +1,7 @@
 # Electronic Medical Record
 
+*Live Deployement Link:* https://electronic-medical-record-web-app-678-ezdxbub2gjddfrdp.eastasia-01.azurewebsites.net/ 
+
 A full-stack Electronic Medical Record (EMR) web application developed as a senior software development project by a team of college students.
 
 The application provides healthcare staff with tools for managing patients, appointments, medical information, practitioner charting, employee communication, and employee administration. The application uses **Blazor Server** for the user interface and a service-oriented architecture to separate business logic and database operations from the presentation layer.
